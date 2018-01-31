@@ -1,17 +1,151 @@
-# Learn more about services, parameters and containers at
-# http://symfony.com/doc/current/book/service_container.html
-parameters:
-#    parameter_name: value
-
-services:
-  noveo.service.user_service:
-    class: NoveoBundle\Service\UserService
-    arguments: ['@service_container']
-  noveo.service.group_service:
-    class: NoveoBundle\Service\GroupService
-    arguments: ['@service_container']
-  noveo.service.event_service:
-    class: NoveoBundle\Service\EventService
-    arguments: ['@service_container']
-    tags:
-      - { name: kernel.event_listener, event: kernel.exception, method: setNotFoundPage  }
+openapi: 3.0.0
+info: 
+  title: Link Example
+  version: 1.0.0
+paths: 
+  /2.0/users/{username}: 
+    get: 
+      operationId: getUserByName
+      parameters: 
+      - name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses: 
+        '200':
+          description: The User
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/user'
+          links:
+            userRepositories:
+              $ref: '#/components/links/UserRepositories'
+  /2.0/repositories/{username}:
+    get:
+      operationId: getRepositoriesByOwner
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: repositories owned by the supplied user
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/repository'
+          links:
+            userRepository:
+              $ref: '#/components/links/UserRepository'
+  /2.0/repositories/{username}/{slug}: 
+    get: 
+      operationId: getRepository
+      parameters: 
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses: 
+        '200':
+          description: The repository
+          content:
+              application/json: 
+                schema: 
+                  $ref: '#/components/schemas/repository'
+          links:
+            repositoryPullRequests:
+              $ref: '#/components/links/RepositoryPullRequests'
+  /2.0/repositories/{username}/{slug}/pullrequests: 
+    get: 
+      operationId: getPullRequestsByRepository
+      parameters: 
+      - name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: state
+        in: query
+        schema:
+          type: string
+          enum: 
+            - open
+            - merged
+            - declined
+      responses: 
+        '200':
+          description: an array of pull request objects
+          content:
+            application/json: 
+              schema: 
+                type: array
+                items: 
+                  $ref: '#/components/schemas/pullrequest'
+  /2.0/repositories/{username}/{slug}/pullrequests/{pid}: 
+    get: 
+      operationId: getPullRequestsById
+      parameters: 
+      - name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: pid
+        in: path
+        required: true
+        schema:
+          type: string
+      responses: 
+        '200':
+          description: a pull request object
+          content:
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/pullrequest'
+          links:
+            pullRequestMerge:
+              $ref: '#/components/links/PullRequestMerge'
+  /2.0/repositories/{username}/{slug}/pullrequests/{pid}/merge: 
+    post: 
+      operationId: mergePullRequest
+      parameters: 
+      - name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: pid
+        in: path
+        required: true
+        schema:
+          type: string
+      responses: 
+        '204':
+          description: the PR was successfully merged

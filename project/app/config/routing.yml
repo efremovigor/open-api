@@ -1,4 +1,0 @@
-shop:
-    resource: '@NoveoBundle/Controller'
-    type:     annotation
-    prefix: /

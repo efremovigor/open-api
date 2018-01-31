@@ -2,4 +2,6 @@
 
 require '../app/autoload.php';
 $kernel = new Kernel();
-var_dump($kernel);
+$parser = new YmlParser();
+
+var_dump($parser->getYml($kernel->getAppDir().'/config/services.yml'));

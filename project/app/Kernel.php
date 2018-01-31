@@ -3,9 +3,15 @@
 
 class Kernel
 {
+
+	public function getAppDir(): string
+	{
+		return __DIR__;
+	}
+
     public function getRootDir(): string
     {
-        return __DIR__;
+        return __DIR__.'/..';
     }
 
     public function getCacheDir():string
@@ -21,13 +27,9 @@ class Kernel
         return dirname(__DIR__).'/var/logs';
     }
 
-	private function getEnvironment()
+	private function getEnvironment(): string
 	{
 		return 'prod';
 	}
 
-	//public function registerContainerConfiguration(LoaderInterface $loader)
-    //{
-    //    $loader->load($this->getRootDir().'/config/'.$this->getEnvironment().'/config.yml');
-    //}
 }
