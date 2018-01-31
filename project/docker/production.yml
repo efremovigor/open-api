@@ -1,0 +1,27 @@
+project.ru:
+  build: "./image"
+  volumes:
+  # Nginx configuration
+    - "./config/nginx/nginx.conf:/etc/nginx/nginx.conf"
+    - "./config/nginx/conf.d:/etc/nginx/conf.d"
+    - "./config/nginx/sites-enabled:/etc/nginx/sites-enabled"
+  # PHP configuration
+    - "./config/php7.1/cli/php.ini:/etc/php/7.1/cli/php.ini"
+    - "./config/php7.1/fpm/php.ini:/etc/php/7.1/fpm/php.ini"
+    - "./config/php7.1/fpm/php-fpm.conf:/etc/php/7.1/fpm/php-fpm.conf"
+    - "./config/php7.1/fpm/pool.d:/etc/php/7.1/fpm/pool.d"
+  # SSH & composer configuration
+    - "./runtime/.ssh:/var/www/.ssh"
+    - "./runtime/.composer:/home/project.ru/.composer"
+  # Project resources mapping
+    - "../app:/home/project.ru/app"
+    - "../bin:/home/project.ru/bin"
+    - "../src:/home/project.ru/src"
+    - "../var:/home/project.ru/var"
+    - "../web:/home/project.ru/web"
+    - "../composer.json:/home/project.ru/composer.json"
+    - "../composer.lock:/home/project.ru/composer.lock"
+    - "../composer.phar:/home/project.ru/composer.phar"
+  working_dir: /home/project.ru/
+  env_file:
+    - "./production.env"

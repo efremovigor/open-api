@@ -1,0 +1,16 @@
+project.ru:
+  extends:
+    file: production.yml
+    service: project.ru
+  command: /bin/true
+
+project.ru.xdebug:
+  extends:
+    file: production.yml
+    service: project.ru
+  build: image
+  dockerfile: Dockerfile.xdebug
+  volumes:
+    - "./config/php7.1/mods-available/xdebug.ini:/etc/php/7.1/mods-available/xdebug.ini"
+  ports:
+    - "127.0.0.1:11111:80"

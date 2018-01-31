@@ -1,0 +1,145 @@
+#!/usr/bin/env php
+
+<?php
+
+class SetupAction
+{
+    protected $currentDir;
+
+    public function __construct($argv)
+    {
+        $this->currentDir = realpath(dirname(__FILE__));
+
+        $this->xdebug = false;
+
+        if (isset($argv[1])) {
+            if ($argv[1] == 'xdebug') {
+                $this->xdebug = true;
+            }
+        }
+    }
+
+    public function run()
+    {
+        $this->processEnv();
+        $this->processCompose();
+        $this->prepareRuntimeSSH();
+        $this->prepareRuntimeComposer();
+
+        if ($this->xdebug) {
+            $this->processXdebug();
+        }
+        else {
+            @unlink("{$this->currentDir}/config/php7.1/mods-available/xdebug.ini");
+        }
+
+        echo "Environment setup completed!".PHP_EOL;
+        echo "Please, refer to README.md for further instructions".PHP_EOL;
+
+        return 0;
+    }
+
+    protected function processEnv()
+    {
+        $pathFrom = "{$this->currentDir}/env/production.env.example";
+        $pathTo   = "{$this->currentDir}/production.env";
+
+        $content  = file_get_contents($pathFrom);
+
+        if($content === false) {
+            throw new \Exception("Failed to read {$pathFrom}");
+        }
+
+        if(!file_put_contents($pathTo, $content)) {
+            throw new \Exception("Failed to write content to {$pathTo}");
+        }
+    }
+
+    private function processXdebug()
+    {
+        $pathFrom = "{$this->currentDir}/xdebug.ini.example";
+        $pathTo   = "{$this->currentDir}/config/php7.1/mods-available/xdebug.ini";
+
+        $content  = file_get_contents($pathFrom);
+
+        if($content === false) {
+            throw new \Exception("Failed to read {$pathFrom}");
+        }
+
+        if(!file_put_contents($pathTo, $content)) {
+            throw new \Exception("Failed to write content to {$pathTo}");
+        }
+
+        chmod($pathTo, 0600);
+    }
+
+    protected function processCompose()
+    {
+        $ext = 'example';
+
+        if ($this->xdebug) {
+            $ext = 'xdebug';
+        }
+
+        $pathFrom = "{$this->currentDir}/compose/docker-compose.yml.{$ext}";
+        $pathTo   = "{$this->currentDir}/docker-compose.yml";
+
+        if(!copy($pathFrom, $pathTo)) {
+            throw new \Exception("Failed to copy {$pathFrom} -> {$pathTo}");
+        }
+    }
+
+    protected function prepareRuntimeComposer()
+    {
+        $path = "{$this->currentDir}/runtime/.composer";
+
+        if(!is_dir($path)) {
+            if(!mkdir($path, 0700, true)) {
+                throw new \Exception("Failed to create {$path}");
+            }
+        }
+
+        $files = array('auth.json');
+
+        foreach($files as $file) {
+            $pathFrom = getenv("HOME") . "/.composer/{$file}";
+            $pathTo   = "{$path}/{$file}";
+
+            if(is_file($pathFrom) && !copy($pathFrom, $pathTo)) {
+                $this->stdout("WARNING: Failed to copy {$pathFrom} -> {$pathTo}");
+            }
+        }
+    }
+
+    protected function prepareRuntimeSSH()
+    {
+        $path = "{$this->currentDir}/runtime/.ssh";
+
+        if(!is_dir($path)) {
+            if(!mkdir($path, 0700, true)) {
+                throw new \Exception("Failed to create {$path}");
+            }
+        }
+
+        $files = array('id_rsa', 'id_rsa.pub');
+
+        foreach($files as $file) {
+            $pathFrom = getenv("HOME") . "/.ssh/{$file}";
+            $pathTo   = "{$path}/{$file}";
+
+            if(!copy($pathFrom, $pathTo)) {
+                throw new \Exception("Failed to copy {$pathFrom} -> {$pathTo}");
+            }
+
+            chmod($pathTo, 0600);
+        }
+    }
+
+    protected static function stdout($string)
+    {
+        return fwrite(\STDOUT, $string);
+    }
+}
+
+$setup = new SetupAction($argv);
+$setup->run();

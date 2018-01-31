@@ -1,0 +1,11 @@
+zend_extension=xdebug.so
+
+[xdebug]
+xdebug.remote_autostart=on
+xdebug.remote_enable=on
+xdebug.remote_handler="dbgp"
+xdebug.remote_host="containerhost"
+xdebug.remote_port=9980
+xdebug.remote_mode=req
+xdebug.idekey="PHPSTORM_NOVEO"
+xdebug.max_nesting_level=1024

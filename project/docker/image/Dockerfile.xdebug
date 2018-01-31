@@ -1,0 +1,5 @@
+FROM docker_project.ru
+
+RUN apt-get install php-xdebug;
+
+RUN phpenmod xdebug;

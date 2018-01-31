@@ -1,0 +1,6 @@
+project.ru:
+  extends:
+    file: production.yml
+    service: project.ru
+  ports:
+    - "127.0.0.1:11111:80"
