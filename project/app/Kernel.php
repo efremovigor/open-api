@@ -4,32 +4,56 @@
 class Kernel
 {
 
-	public function getAppDir(): string
+	/**
+	 * @var Router
+	 */
+	private $router;
+
+
+	/**
+	 * Kernel constructor.
+	 * @throws \RuntimeException
+	 */
+	public function __construct()
+	{
+		$this->router = new Router();
+	}
+
+
+	public static function getAppDir(): string
 	{
 		return __DIR__;
 	}
 
-    public function getRootDir(): string
-    {
-        return __DIR__.'/..';
-    }
+	public static function getRootDir(): string
+	{
+		return __DIR__ . '/..';
+	}
 
-    public function getCacheDir():string
-    {
-        return dirname(__DIR__).'/var/cache/'.$this->getEnvironment();
-    }
+	public static function getCacheDir(): string
+	{
+		return dirname(__DIR__) . '/var/cache/' . static::getEnvironment();
+	}
 
 	/**
 	 * @return string
 	 */
-	public function getLogDir():string
-    {
-        return dirname(__DIR__).'/var/logs';
-    }
+	public static function getLogDir(): string
+	{
+		return dirname(__DIR__) . '/var/logs';
+	}
 
-	private function getEnvironment(): string
+	private static function getEnvironment(): string
 	{
 		return 'prod';
+	}
+
+	/**
+	 * @return Router
+	 */
+	public function getRouter(): Router
+	{
+		return $this->router;
 	}
 
 }

@@ -9,18 +9,51 @@
 class Router
 {
 
-	private $baseRoute;
+	/**
+	 * @var UrlAnalyzer
+	 */
+	private $routeAnalyzer;
 
+	/**
+	 * @var RoutingList
+	 */
+	private $routingList;
+
+	/**
+	 * Router constructor.
+	 * @throws \RuntimeException
+	 */
 	public function __construct()
 	{
-		$this->baseRoute = $_SERVER['REQUEST_URI'];
+		$file = (new YmlParser())->getYml(Kernel::getAppDir() . '/config/routing.yml');
+		if (!isset($file['routing']['paths']) || !is_array($file['routing']['paths'])) {
+			throw new \RuntimeException('Не валидный routing list');
+		}
+		$this->routeAnalyzer = new UrlAnalyzer($_SERVER['REQUEST_URI']);
+		$this->routeAnalyzer->processing();
+		$this->routingList = new RoutingList($file['routing']['paths']);
+		$validator = new RouterValidator();
+		foreach ($this->routingList->getAll() as $item) {
+			$validator->checkRoute($this->routeAnalyzer ,$item);
+		}
+
 	}
 
 	/**
-	 * @return string
+	 * @return array
 	 */
-	public function getBaseRoute(): string
+	public function getRoutingList(): RoutingList
 	{
-		return $this->baseRoute;
+		return $this->routingList;
 	}
+
+	/**
+	 * @return \UrlAnalyzer
+	 */
+	public function getRouteAnalyzer(): UrlAnalyzer
+	{
+		return $this->routeAnalyzer;
+	}
+
+
 }
