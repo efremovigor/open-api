@@ -9,24 +9,22 @@
 class RouterValidator
 {
 
-	public function checkRoute(UrlAnalyzer $analyzer, RoutingPath $routingPath)
+	/**
+	 * @param \UrlAnalyzer  $analyzer
+	 * @param \PathAnalyzer $pathAnalyzer
+	 *
+	 * @return bool
+	 */
+	public function checkRoute(UrlAnalyzer $analyzer, PathAnalyzer $pathAnalyzer): bool
 	{
-		var_dump($analyzer->getMatches());
-		var_dump($routingPath->getMatches());
-		$state = true;
-		if (count($routingPath->getMatches()) !== count($analyzer->getMatches())) {
-			$state = false;
-		} else {
-			foreach ($routingPath->getMatches() as $key => $match) {
-				if (!preg_match($match, $analyzer->getMatches()[$key])) {
-					$state = false;
-					break;
-				}
-
+		if (count($pathAnalyzer->getMatches()) !== count($analyzer->getMatches())) {
+			return false;
+		}
+		foreach ($pathAnalyzer->getMatches() as $key => $match) {
+			if (!preg_match($match, $analyzer->getMatches()[$key])) {
+				return false;
 			}
 		}
-
-		var_dump('state = ' . (int)$state);
-		var_dump('---------------------------------------------------------------------');
+		return true;
 	}
 }

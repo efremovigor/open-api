@@ -25,23 +25,29 @@ class PathAnalyzer extends ARouteAnalyzer
 	{
 		$this->parts = explode('/', $this->route);
 		foreach ($this->parts as $part) {
-			if (preg_match('/^{.*}$/', $part)) {
+			if (preg_match(RegexpPatterns::MATCH_ANY_ROUTE_VAR, $part)) {
 				$paramName = preg_replace('/[{}]*/', '', $part);
 				if (isset($this->parameters[$paramName])) {
 					switch ($this->parameters[$paramName]['type']) {
 						case 'choice':
-							$this->matches[] = '/^(' . $this->parameters[$paramName]['value'] . ')$/';
+							$this->matches[] =
+								RegexpPatterns::CHOICE_STRICT_START .
+								$this->parameters[$paramName]['value'] .
+								RegexpPatterns::CHOICE_STRICT_END;
 							continue 2;
 						case 'regexp':
-							$this->matches[] = '/^' . $this->parameters[$paramName]['value'] . '$/';
+							$this->matches[] =
+								RegexpPatterns::STRICT_START .
+								$this->parameters[$paramName]['value'] .
+								RegexpPatterns::STRICT_END;
 							continue 2;
 					}
 				} else {
-					$this->matches[] = '/^[a-z_0-9\.]{2,}$/';
+					$this->matches[] = RegexpPatterns::CLEAR_STRING;
 					continue;
 				}
 			}
-			$this->matches[] = '/^'.$part.'$/';
+			$this->matches[] = RegexpPatterns::STRICT_START . $part . RegexpPatterns::STRICT_END;
 		}
 	}
 

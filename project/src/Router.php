@@ -15,9 +15,9 @@ class Router
 	private $routeAnalyzer;
 
 	/**
-	 * @var RoutingList
+	 * @var RoutingManager
 	 */
-	private $routingList;
+	private $routingManager;
 
 	/**
 	 * Router constructor.
@@ -25,26 +25,18 @@ class Router
 	 */
 	public function __construct()
 	{
-		$file = (new YmlParser())->getYml(Kernel::getAppDir() . '/config/routing.yml');
-		if (!isset($file['routing']['paths']) || !is_array($file['routing']['paths'])) {
-			throw new \RuntimeException('Не валидный routing list');
-		}
+		$this->routingManager = new RoutingManager();
 		$this->routeAnalyzer = new UrlAnalyzer($_SERVER['REQUEST_URI']);
 		$this->routeAnalyzer->processing();
-		$this->routingList = new RoutingList($file['routing']['paths']);
-		$validator = new RouterValidator();
-		foreach ($this->routingList->getAll() as $item) {
-			$validator->checkRoute($this->routeAnalyzer ,$item);
-		}
-
+		var_dump($this->getPathRoute());
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getRoutingList(): RoutingList
+	public function getRoutingManager(): RoutingManager
 	{
-		return $this->routingList;
+		return $this->routingManager;
 	}
 
 	/**
@@ -55,5 +47,18 @@ class Router
 		return $this->routeAnalyzer;
 	}
 
-
+	/**
+	 * @return null|RoutingPath
+	 */
+	public function getPathRoute(): ?RoutingPath
+	{
+		$validator = new RouterValidator();
+		foreach ($this->routingManager->getRoutingList()->getAll() as $item) {
+			$valid = $validator->checkRoute($this->routeAnalyzer ,$item->getPathAnalyzer());
+			if($valid === true){
+				return $item;
+			}
+		}
+		return null;
+	}
 }

@@ -23,8 +23,12 @@ class RoutingPath
 		$this->pathAnalyzer->processing();
 	}
 
-	public function getMatches(): array
+	/**
+	 * @return PathAnalyzer
+	 */
+	public function getPathAnalyzer(): PathAnalyzer
 	{
-		return $this->pathAnalyzer->getMatches();
+		return $this->pathAnalyzer;
 	}
+
 }
