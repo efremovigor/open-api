@@ -10,18 +10,18 @@ class RouterValidator
 {
 
 	/**
-	 * @param \UrlAnalyzer  $analyzer
+	 * @param \UrlAnalyzer  $urlAnalyzer
 	 * @param \PathAnalyzer $pathAnalyzer
 	 *
 	 * @return bool
 	 */
-	public function checkRoute(UrlAnalyzer $analyzer, PathAnalyzer $pathAnalyzer): bool
+	public function checkRoute(UrlAnalyzer $urlAnalyzer, PathAnalyzer $pathAnalyzer): bool
 	{
-		if (count($pathAnalyzer->getMatches()) !== count($analyzer->getMatches())) {
+		if (count($pathAnalyzer->getMatches()) !== count($urlAnalyzer->getMatches())) {
 			return false;
 		}
 		foreach ($pathAnalyzer->getMatches() as $key => $match) {
-			if (!preg_match($match, $analyzer->getMatches()[$key])) {
+			if (!preg_match($match, $urlAnalyzer->getMatches()[$key])) {
 				return false;
 			}
 		}

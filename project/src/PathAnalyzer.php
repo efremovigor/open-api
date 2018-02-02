@@ -6,7 +6,7 @@
  * Time: 11:53
  */
 
-class PathAnalyzer extends ARouteAnalyzer
+class PathAnalyzer extends RouteAnalyzerAbstract
 {
 
 	private $parameters = [];
@@ -27,6 +27,11 @@ class PathAnalyzer extends ARouteAnalyzer
 		foreach ($this->parts as $part) {
 			if (preg_match(RegexpPatterns::MATCH_ANY_ROUTE_VAR, $part)) {
 				$paramName = preg_replace('/[{}]*/', '', $part);
+				if (preg_match(RegexpPatterns::MATCH_MATRIX_ROUTE_VAR, $part)) {
+					$this->matches[] = RegexpPatterns::STRICT_START . $paramName . '=' . RegexpPatterns::CLEAR_STRING . '(,' . RegexpPatterns::CLEAR_STRING . ')*' .
+						RegexpPatterns::STRICT_END.'u';
+					continue;
+				}
 				if (isset($this->parameters[$paramName])) {
 					switch ($this->parameters[$paramName]['type']) {
 						case 'choice':
@@ -42,10 +47,9 @@ class PathAnalyzer extends ARouteAnalyzer
 								RegexpPatterns::STRICT_END;
 							continue 2;
 					}
-				} else {
-					$this->matches[] = RegexpPatterns::CLEAR_STRING;
-					continue;
 				}
+				$this->matches[] = RegexpPatterns::MATCH_CLEAR_STRING;
+				continue;
 			}
 			$this->matches[] = RegexpPatterns::STRICT_START . $part . RegexpPatterns::STRICT_END;
 		}

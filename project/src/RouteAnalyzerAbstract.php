@@ -6,7 +6,7 @@
  * Time: 11:49
  */
 
-abstract class ARouteAnalyzer
+abstract class RouteAnalyzerAbstract
 {
 
 	/**

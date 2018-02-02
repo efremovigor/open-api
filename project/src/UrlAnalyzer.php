@@ -6,7 +6,7 @@
  * Time: 9:59
  */
 
-class UrlAnalyzer extends ARouteAnalyzer
+class UrlAnalyzer extends RouteAnalyzerAbstract
 {
 
 	/**

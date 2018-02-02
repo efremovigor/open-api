@@ -11,12 +11,20 @@ routing:
         index2:
             path: /name/{id}
             defaults: { controller: 'Module1:Controller1:action1' }
-            methods:  [GET]
+            methods:  [GET,DELETE]
+            parameters:
+                id:
+                    value: \d+
+                    type: regexp
         index3:
-            path: /name/{id}/name1
+            path: /users/{;id}/product/{;name}
             defaults: { controller: 'Module1:Controller1:action1' }
-            methods:  [GET]
-        index3:
+            methods:  [GET,POST]
+            parameters:
+                id:
+                    value: \d+
+                    type: regexp
+        index4:
             path: /name/locale/{name}
             defaults: { controller: 'Module1:Controller1:action1' }
             methods:  [GET]

@@ -6,7 +6,7 @@
  * Time: 8:46
  */
 
-class RoutingList extends ACollection
+class RoutingList extends CollectionAbstract
 {
 
 	public function __construct(array $elements = [])
