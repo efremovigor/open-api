@@ -17,7 +17,7 @@ class RoutingManager
 	 */
 	public function __construct()
 	{
-		$file = (new YmlParser())->getYml(Kernel::getAppDir() . '/config/routing.yml');
+		$file = (new YmlParser())->getYml(App::getAppDir() . '/config/routing.yml');
 		if (!isset($file['routing']['paths']) || !is_array($file['routing']['paths'])) {
 			throw new \RuntimeException('Не валидный routing list');
 		}

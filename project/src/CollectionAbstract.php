@@ -18,17 +18,17 @@ abstract class CollectionAbstract implements Iterator
 	/**
 	 * @param $element
 	 */
-	public function add($element)
-	{
-		$this->elements[count($this->elements)] = $element;
+	public function add($element): void
+    {
+		$this->elements[] = $element;
 	}
 
 	/**
 	 * @param $key
 	 * @param $element
 	 */
-	public function set($key, $element)
-	{
+	public function set($key, $element): void
+    {
 		$this->elements[$key] = $element;
 	}
 
@@ -91,12 +91,13 @@ abstract class CollectionAbstract implements Iterator
 		$this->position = 0;
 	}
 
-	/**
-	 * Seeks to a position
-	 *
-	 * @param int $position
-	 * @return void
-	 */
+    /**
+     * Seeks to a position
+     *
+     * @param int $position
+     * @return void
+     * @throws \Exception
+     */
 	public function seek($position): void
 	{
 		try {
