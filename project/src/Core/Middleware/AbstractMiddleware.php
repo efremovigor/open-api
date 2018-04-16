@@ -9,19 +9,27 @@
 namespace Core\Middleware;
 
 
-use Core\MiddlewareLoggingInterface;
+use Psr\Container\ContainerInterface;
 
 abstract class AbstractMiddleware implements MiddlewareInterface
 {
     /**
-     * @var MiddlewareCollection
+     * @var MiddlewareSplQueue
      */
     protected $middlewareCollection;
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
 
-    public function __construct(MiddlewareCollection $middlewareCollection)
+    /**
+     * AbstractMiddleware constructor.
+     * @param MiddlewareSplQueue $middlewareCollection
+     * @param ContainerInterface $container
+     */
+    public function __construct(MiddlewareSplQueue $middlewareCollection, ContainerInterface $container)
     {
         $this->middlewareCollection = $middlewareCollection;
-        if($this instanceof MiddlewareLoggingInterface){
-        }
+        $this->container = $container;
     }
 }

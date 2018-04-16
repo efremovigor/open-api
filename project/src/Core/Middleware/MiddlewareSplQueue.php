@@ -9,28 +9,27 @@
 namespace Core\Middleware;
 
 
+use Psr\Container\ContainerInterface;
 use Psr\Http\Server\MiddlewareInterface;
 
-class MiddlewareCollection extends \CollectionAbstract
+class MiddlewareSplQueue extends \SplQueue
 {
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
 
     /**
      * MiddlewareCollection constructor.
-     * @param array $elements
+     * @param array              $elements
+     * @param ContainerInterface $container
      */
-    public function __construct(array $elements = [])
+    public function __construct(array $elements = [], ContainerInterface $container)
     {
+        $this->container = $container;
         foreach ($elements as $name) {
-            parent::add($this->createMiddleware($name));
+            parent::add($this->count(), $this->createMiddleware($name));
         }
-    }
-
-    /**
-     * @return MiddlewareInterface[]
-     */
-    private function getAll(): array
-    {
-        return $this->elements;
     }
 
     /**
@@ -38,7 +37,7 @@ class MiddlewareCollection extends \CollectionAbstract
      */
     public function shift(): MiddlewareInterface
     {
-        return array_shift($this->elements);
+        return parent::shift();
     }
 
     /**
@@ -48,23 +47,12 @@ class MiddlewareCollection extends \CollectionAbstract
      */
     private function getNumber(string $key): int
     {
-        foreach ($this->getAll() as $number => $item) {
+        foreach ($this as $number => $item) {
             if ($item->getName() === $key) {
                 return $number;
             }
         }
         throw new \RuntimeException('Ключ Middleware not exist');
-    }
-
-    private function injectMiddleware(int $position, MiddlewareInterface $middleware): void
-    {
-        $this->elements = array_merge(
-            array_merge(
-                \array_slice($this->elements, 0, $position, true),
-                [$middleware]
-            ),
-            \array_slice($this->elements, $position, \count($this->elements) - 1, true)
-        );
     }
 
     /**
@@ -74,7 +62,7 @@ class MiddlewareCollection extends \CollectionAbstract
      */
     public function addBefore(string $key, string $middleware): void
     {
-        $this->injectMiddleware($this->getNumber($key), $this->createMiddleware($middleware));
+        $this->add($this->getNumber($key), $this->createMiddleware($middleware));
     }
 
     /**
@@ -84,11 +72,11 @@ class MiddlewareCollection extends \CollectionAbstract
      */
     public function addAfter(string $key, string $middleware): void
     {
-        $this->injectMiddleware($this->getNumber($key) + 1, $this->createMiddleware($middleware));
+        $this->add($this->getNumber($key) + 1, $this->createMiddleware($middleware));
     }
 
     private function createMiddleware(string $name): \Core\Middleware\MiddlewareInterface
     {
-        return new $name($this);
+        return new $name($this, $this->container);
     }
 }

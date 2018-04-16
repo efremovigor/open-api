@@ -8,7 +8,7 @@
 
 namespace Core;
 
-use Core\Middleware\MiddlewareCollection;
+use Core\Middleware\MiddlewareSplQueue;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -17,7 +17,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 class RequestHandler implements RequestHandlerInterface
 {
     /**
-     * @var MiddlewareCollection
+     * @var MiddlewareSplQueue
      */
     private $middlewares;
 
@@ -38,9 +38,10 @@ class RequestHandler implements RequestHandlerInterface
     {
         return [
             \Middleware\TryMiddleware::class,
+            \Middleware\ProfilerMiddleware::class,
             \Middleware\EnvMiddleware::class,
-            \Middleware\DebugMiddleware::class,
             \Middleware\InitMiddleware::class,
+            \Middleware\DebugMiddleware::class,
             \Middleware\RouterMiddleware::class,
             \Middleware\ControllerMiddleware::class,
             \Middleware\ResponseMiddleware::class,
@@ -51,7 +52,7 @@ class RequestHandler implements RequestHandlerInterface
     public function __construct()
     {
         $this->request = new Request();
-        $this->middlewares = new MiddlewareCollection($this->registerMiddlewares());
+        $this->middlewares = new MiddlewareSplQueue($this->registerMiddlewares(),new ContainerRegistry());
     }
 
     /**
@@ -64,9 +65,6 @@ class RequestHandler implements RequestHandlerInterface
         $middleware =$this->middlewares->shift();
         if ($middleware !== null) {
             $this->response = $middleware->process($this->request, $this);
-            if($middleware instanceof MiddlewareLoggingInterface){
-
-            }
         }
         return $this->response;
     }

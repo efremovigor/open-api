@@ -15,11 +15,6 @@ use Psr\Http\Message\StreamInterface;
 class Response implements ResponseInterface
 {
 
-    public function __construct()
-    {
-        $this->logger = new Logger();
-    }
-
     /**
      * Retrieves the HTTP protocol version as a string.
      *

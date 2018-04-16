@@ -2,11 +2,11 @@
 /**
  * Created by PhpStorm.
  * User: igore
- * Date: 13.04.18
- * Time: 14:53
+ * Date: 16.04.18
+ * Time: 14:37
  */
 
-namespace Core;
+namespace Core\Container;
 
 
 use Psr\Log\LoggerInterface;
