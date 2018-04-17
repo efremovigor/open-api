@@ -19,8 +19,12 @@ class Socket extends AbstractContainerItem
      */
     public function call(SocketRequest $request): SocketResponse
     {
+        //todo tothink - every call will create a new socket??
+        //better use most common class
+        //todo tothink - stream_socket_client - is more preferable than fsockopen - it older and by fact is just a copy
         $connect = fsockopen($request->getHost(), $request->getPort(), $errno, $errstr, $request->getTimeout());
-        if ($connect === false) {
+        //yoda notation is better
+        if (false === $connect) {
             throw new \RuntimeException($request->getHost().':'.$request->getPort().' - not connect');
         }
         stream_set_timeout($connect,$request->getTimeout());

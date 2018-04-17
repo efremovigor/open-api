@@ -5,6 +5,7 @@ namespace Core\Container;
 
 /**
  * todo:много копипаста, нужна оптимизация на уровне Symfony
+ * todo tothink is really need so complex and magic class
  * Class Serializer
  * @package Helpers
  */

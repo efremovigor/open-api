@@ -39,6 +39,8 @@ class ConfigManager extends AbstractContainerItem
      */
     public function init(): void
     {
+        //todo tothink - implicit common method use - probably we should retur object of specified class??
+        // i. e. $this->env = $this->container->getEnvironment();
         $this->env = $this->container->get(Registry::ENV);
         $this->socket = $this->container->get(Registry::SOCKET);
         $this->ymlParser = $this->container->get(Registry::YML_PARSER);
@@ -57,7 +59,7 @@ class ConfigManager extends AbstractContainerItem
      */
     private function initConf(): void
     {
-        if(!file_exists($this->getParametersPath())){
+        if(!\file_exists($this->getParametersPath())){
             $this->createFileParameters();
         }
         $this->conf = $this->ymlParser->packPath($this->getParametersPath(),ExternalConf::class);
@@ -79,6 +81,6 @@ class ConfigManager extends AbstractContainerItem
         $request = new SocketRequest($conf->getServer(), $conf->getUrl());
         $request->setTimeout(2);
         $parameters = $this->socket->call($request);
-        file_put_contents($this->getParametersPath(), $parameters->getBody());
+        \file_put_contents($this->getParametersPath(), $parameters->getBody());
     }
 }

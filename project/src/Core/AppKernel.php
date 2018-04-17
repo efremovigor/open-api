@@ -15,6 +15,7 @@ abstract class AppKernel
      */
     public static function getConfDir(): string
     {
+        //todo think maybe better use path as parameter - self::getRootDir('/app/config') ??
         return self::getRootDir().'/app/config';
     }
 

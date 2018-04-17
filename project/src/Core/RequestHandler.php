@@ -51,6 +51,7 @@ class RequestHandler implements RequestHandlerInterface
     public function __construct()
     {
         $this->request = new Request();
+        //todo tothink probably we should to create Response here?
         $this->middlewares = new MiddlewareSplQueue($this->registerMiddlewares(),new ContainerRegistry());
     }
 

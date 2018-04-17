@@ -8,7 +8,7 @@
 
 namespace Core\Container;
 
-
+//todo tothink this is not registry - it is constants class
 final class Registry
 {
     public const ENV = 'environment';
