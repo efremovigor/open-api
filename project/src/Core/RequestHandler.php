@@ -39,7 +39,6 @@ class RequestHandler implements RequestHandlerInterface
         return [
             \Middleware\TryMiddleware::class,
             \Middleware\ProfilerMiddleware::class,
-            \Middleware\EnvMiddleware::class,
             \Middleware\InitMiddleware::class,
             \Middleware\DebugMiddleware::class,
             \Middleware\RouterMiddleware::class,

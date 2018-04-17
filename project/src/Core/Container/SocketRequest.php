@@ -12,8 +12,7 @@ namespace Core\Container;
 class SocketRequest
 {
     private $host;
-    private $protocol = 'ssl';
-    private $port = 443;
+    private $port = 80;
     private $url;
     private $method = 'GET';
     private $httpVersion = 'HTTP/1.1';
@@ -23,14 +22,6 @@ class SocketRequest
     {
         $this->host = $host;
         $this->url = $url;
-    }
-
-    /**
-     * @param string $protocol
-     */
-    public function setProtocol(string $protocol): void
-    {
-        $this->protocol = $protocol;
     }
 
     /**
@@ -111,14 +102,6 @@ class SocketRequest
     public function getPort(): int
     {
         return $this->port;
-    }
-
-    /**
-     * @return string
-     */
-    public function getProtocol(): string
-    {
-        return $this->protocol;
     }
 
     /**

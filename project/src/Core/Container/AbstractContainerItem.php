@@ -11,7 +11,7 @@ namespace Core\Container;
 
 use Psr\Container\ContainerInterface;
 
-class AbstractContainerItem implements ContainerItemInterface
+abstract class AbstractContainerItem implements ContainerItemInterface
 {
 
     /**

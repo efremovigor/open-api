@@ -13,9 +13,9 @@ abstract class AppKernel
     /**
      * @return string
      */
-    public static function getDir(): string
+    public static function getConfDir(): string
     {
-        return __DIR__;
+        return self::getRootDir().'/app/config';
     }
 
     /**
@@ -23,7 +23,7 @@ abstract class AppKernel
      */
     public static function getRootDir(): string
     {
-        return self::getDir() . '/..';
+        return  __DIR__ . '/../..';
     }
 
     /**

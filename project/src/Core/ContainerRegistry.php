@@ -8,11 +8,13 @@
 
 namespace Core;
 
+use Core\Container\ConfigManager;
 use Core\Container\ContainerItemInterface;
 use Core\Container\Environment;
 use Core\Container\Logger;
 use Core\Container\Registry;
 use Core\Container\Socket;
+use Core\Container\YmlParser;
 
 class ContainerRegistry extends AbstractRegistry
 {
@@ -26,6 +28,8 @@ class ContainerRegistry extends AbstractRegistry
             Registry::ENV    => Environment::class,
             Registry::LOGGER => Logger::class,
             Registry::SOCKET => Socket::class,
+            Registry::YML_PARSER => YmlParser::class,
+            Registry::CONF_MANAGER => ConfigManager::class,
         ];
     }
 
@@ -36,6 +40,11 @@ class ContainerRegistry extends AbstractRegistry
     protected function createInstance($id): ContainerItemInterface
     {
         $class = $this->getList()[$id];
-        return new $class($this);
+        /**
+         * @var $init ContainerItemInterface
+         */
+        $init = new $class($this);
+        $init->init();
+        return $init;
     }
 }

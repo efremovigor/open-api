@@ -31,11 +31,10 @@ class InitMiddleware extends AbstractMiddleware
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         echo "InitMiddleware - init\r\n";
-
+        $this->initConf();
         /**
          * @var $socketResponse SocketResponse
          */
-        $socketResponse = $this->container->get(Registry::SOCKET)->call(new SocketRequest('gardenmoto.ru','/robots.txt'));
 
         return $handler->handle($request);
     }
@@ -43,6 +42,13 @@ class InitMiddleware extends AbstractMiddleware
     public function getName(): string
     {
         return 'init';
+    }
+
+    private function initConf(): void
+    {
+
+        $socketResponse = $this->container->get(Registry::CONF_MANAGER)->get();
+        var_dump($socketResponse);
     }
 
 }

@@ -13,9 +13,9 @@ class Environment extends AbstractContainerItem
 {
     private $env;
 
-    private const DEV = ['dev','test'];
+    private const DEV = ['dev', 'test'];
 
-    public function init(string $env): void
+    public function set(string $env): void
     {
         $this->env = $env;
     }
@@ -25,7 +25,7 @@ class Environment extends AbstractContainerItem
      */
     public function isDev(): bool
     {
-        return \in_array($this->env,self::DEV,true);
+        return \in_array($this->env, self::DEV, true);
     }
 
     public function getLogLevel(): array
@@ -40,5 +40,15 @@ class Environment extends AbstractContainerItem
             'info',
             'debug',
         ];
+    }
+
+    public function init(): void
+    {
+        $this->set($_SERVER['ENV']);
+    }
+
+    public function get(): string
+    {
+        return $this->env;
     }
 }

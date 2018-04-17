@@ -8,10 +8,9 @@
 
 namespace Core\Container;
 
-
 use Psr\Log\LoggerInterface;
 
-class Logger implements LoggerInterface
+class Logger extends AbstractContainerItem implements LoggerInterface
 {
 
     /**
@@ -141,5 +140,10 @@ class Logger implements LoggerInterface
     public function log($level, $message, array $context = array())
     {
         // TODO: Implement log() method.
+    }
+
+    public function init(): void
+    {
+        // TODO: Implement init() method.
     }
 }

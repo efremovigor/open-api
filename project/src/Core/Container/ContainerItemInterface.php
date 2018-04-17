@@ -14,4 +14,6 @@ use Psr\Container\ContainerInterface;
 interface ContainerItemInterface
 {
     public function __construct(ContainerInterface $container);
+
+    public function init():void;
 }
