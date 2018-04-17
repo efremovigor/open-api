@@ -16,4 +16,5 @@ final class Registry
     public const SOCKET = 'socket';
     public const YML_PARSER = 'yml_parser';
     public const CONF_MANAGER = 'conf_manager';
+    public const SERIALIZER = 'serializer';
 }

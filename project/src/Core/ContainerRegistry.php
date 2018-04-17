@@ -13,6 +13,7 @@ use Core\Container\ContainerItemInterface;
 use Core\Container\Environment;
 use Core\Container\Logger;
 use Core\Container\Registry;
+use Core\Container\Serializer;
 use Core\Container\Socket;
 use Core\Container\YmlParser;
 
@@ -30,6 +31,7 @@ class ContainerRegistry extends AbstractRegistry
             Registry::SOCKET => Socket::class,
             Registry::YML_PARSER => YmlParser::class,
             Registry::CONF_MANAGER => ConfigManager::class,
+            Registry::SERIALIZER => Serializer::class,
         ];
     }
 

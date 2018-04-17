@@ -9,6 +9,8 @@
 namespace Core\Container;
 
 
+use Core\App;
+
 class ConfigManager extends AbstractContainerItem
 {
 
@@ -27,15 +29,56 @@ class ConfigManager extends AbstractContainerItem
      */
     private $ymlParser;
 
+    /**
+     * @var ExternalConf
+     */
+    private $conf;
+
+    /**
+     * @throws \Exception
+     */
     public function init(): void
     {
         $this->env = $this->container->get(Registry::ENV);
         $this->socket = $this->container->get(Registry::SOCKET);
         $this->ymlParser = $this->container->get(Registry::YML_PARSER);
+        $this->initConf();
     }
 
-    public function get()
+
+    public function get(): ExternalConf
     {
-        return $this->ymlParser->getYml(\Core\App::getConfDir().'/'.$this->env->get().'/conf.yml');
+       return $this->conf;
+    }
+
+
+    /**
+     * @throws \Exception
+     */
+    private function initConf(): void
+    {
+        if(!file_exists($this->getParametersPath())){
+            $this->createFileParameters();
+        }
+        $this->conf = $this->ymlParser->packPath($this->getParametersPath(),ExternalConf::class);
+    }
+
+    private function getParametersPath(): string
+    {
+        return App::getConfDir() . '/parameters.yml';
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function createFileParameters():void{
+        /**
+         * @var $conf ExternalHostConf
+         */
+        $conf = $this->ymlParser->packPath(App::getConfDir() . '/' . $this->env->get() . '/conf.yml', ExternalHostConf::class);
+        $request = new SocketRequest($conf->getServer(), $conf->getUrl());
+        $request->setTimeout(2);
+        $parameters = $this->socket->call($request);
+        file_put_contents($this->getParametersPath(), $parameters->getBody());
     }
 }
