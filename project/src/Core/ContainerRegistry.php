@@ -12,6 +12,7 @@ use Core\Container\ContainerItemInterface;
 use Core\Container\Environment;
 use Core\Container\Logger;
 use Core\Container\Registry;
+use Core\Container\Socket;
 
 class ContainerRegistry extends AbstractRegistry
 {
@@ -23,7 +24,8 @@ class ContainerRegistry extends AbstractRegistry
     {
         return [
             Registry::ENV    => Environment::class,
-            Registry::LOGGER => Logger::class
+            Registry::LOGGER => Logger::class,
+            Registry::SOCKET => Socket::class,
         ];
     }
 

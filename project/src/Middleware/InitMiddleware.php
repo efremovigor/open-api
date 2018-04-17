@@ -9,6 +9,9 @@
 namespace Middleware;
 
 
+use Core\Container\Registry;
+use Core\Container\SocketRequest;
+use Core\Container\SocketResponse;
 use Core\Middleware\AbstractMiddleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -23,10 +26,17 @@ class InitMiddleware extends AbstractMiddleware
      * @param ServerRequestInterface  $request
      * @param RequestHandlerInterface $handler
      * @return ResponseInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         echo "InitMiddleware - init\r\n";
+
+        /**
+         * @var $socketResponse SocketResponse
+         */
+        $socketResponse = $this->container->get(Registry::SOCKET)->call(new SocketRequest('gardenmoto.ru','/robots.txt'));
+
         return $handler->handle($request);
     }
 

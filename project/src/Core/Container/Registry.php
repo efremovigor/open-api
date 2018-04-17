@@ -13,4 +13,5 @@ final class Registry
 {
     public const ENV = 'environment';
     public const LOGGER = 'logger';
+    public const SOCKET = 'socket';
 }

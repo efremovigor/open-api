@@ -28,7 +28,7 @@ class EnvMiddleware extends AbstractMiddleware
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         echo "EnvMiddleware - init\r\n";
-        $this->container->get(Registry::ENV)->setConf($_SERVER['ENV']);
+        $this->container->get(Registry::ENV)->init($_SERVER['ENV']);
         return $handler->handle($request);
     }
 

@@ -1,0 +1,16 @@
+parameters:
+    database_host: 192.168.1.1
+    database_port: 3306
+    database_name: neva
+    database_user: neva
+    database_password: phpmyadmin
+    mailer_transport: smtp
+    mailer_host: mail.neva.ru
+    mailer_user: null
+    mailer_password: null
+    mailer_port: 25
+    mailer_encryption: null
+    mailer_dev_email: dev@neva.ru
+    elastic_port: 9312
+    elastic_host: containerhost
+    secret: ThisTokenIsNotSoSecretChangeIt
