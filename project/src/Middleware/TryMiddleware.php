@@ -28,7 +28,7 @@ class TryMiddleware extends AbstractMiddleware
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        echo "TryMiddleware - init\r\n";
+        echo "TryMiddleware - init<br/>";
         try {
             return $handler->handle($request);
         }catch (\Exception $exception){

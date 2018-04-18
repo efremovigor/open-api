@@ -21,14 +21,14 @@ class MiddlewareSplQueue extends \SplQueue
 
     /**
      * MiddlewareCollection constructor.
-     * @param array              $elements
+     * @param array $elements
      * @param ContainerInterface $container
      */
     public function __construct(array $elements = [], ContainerInterface $container)
     {
         $this->container = $container;
         foreach ($elements as $name) {
-            parent::add($this->count(), $this->createMiddleware($name));
+            $this->push($this->createMiddleware($name));
         }
     }
 
@@ -52,7 +52,7 @@ class MiddlewareSplQueue extends \SplQueue
                 return $number;
             }
         }
-        throw new \RuntimeException('Ключ Middleware not exist');
+        throw new \RuntimeException('Key\'s Middleware -' . $key . ' is not exist');
     }
 
     /**

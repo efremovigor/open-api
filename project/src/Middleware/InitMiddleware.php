@@ -10,8 +10,7 @@ namespace Middleware;
 
 
 use Core\Container\Registry;
-use Core\Container\SocketRequest;
-use Core\Container\SocketResponse;
+use Core\Container\Socket\SocketResponse;
 use Core\Middleware\AbstractMiddleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -44,6 +43,10 @@ class InitMiddleware extends AbstractMiddleware
         return 'init';
     }
 
+    /**
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
     private function initConf(): void
     {
 
