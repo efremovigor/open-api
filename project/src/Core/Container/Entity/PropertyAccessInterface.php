@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Container;
+namespace Core\Container\Entity;
 
 interface PropertyAccessInterface
 {

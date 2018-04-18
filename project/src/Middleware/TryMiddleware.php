@@ -32,6 +32,7 @@ class TryMiddleware extends AbstractMiddleware
         try {
             return $handler->handle($request);
         }catch (\Exception $exception){
+            var_dump($exception->getMessage());
             return new Response();
         }
     }

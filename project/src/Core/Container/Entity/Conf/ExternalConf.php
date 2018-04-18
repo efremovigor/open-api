@@ -6,8 +6,10 @@
  * Time: 14:26
  */
 
-namespace Core\Container;
+namespace Core\Container\Entity\Conf;
 
+
+use Core\Container\Entity\PropertyAccessInterface;
 
 class ExternalConf implements PropertyAccessInterface
 {

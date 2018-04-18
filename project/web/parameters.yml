@@ -1,15 +1,16 @@
-databaseHost: 192.168.1.1
-databasePort: 3306
-databaseName: prod
-databaseUser: prod
-databasePassword: phpmyadmin
-mailerTransport: smtp
-mailerHost: mail.neva.ru
-mailerUser: null
-mailerPassword: null
-mailerPort: 25
-mailerEncryption: null
-mailerDevEmail: prod@neva.ru
-elasticPort: 9312
-elasticHost: prod
-secret: ThisTokenIsNotSoSecretChangeIt
+parameters:
+  databaseHost: 192.168.1.1
+  databasePort: 3306
+  databaseName: prod
+  databaseUser: prod
+  databasePassword: phpmyadmin
+  mailerTransport: smtp
+  mailerHost: mail.neva.ru
+  mailerUser: null
+  mailerPassword: null
+  mailerPort: 25
+  mailerEncryption: null
+  mailerDevEmail: prod@neva.ru
+  elasticPort: 9312
+  elasticHost: prod
+  secret: ThisTokenIsNotSoSecretChangeIt

@@ -26,13 +26,18 @@ class ContainerRegistry extends AbstractRegistry
     protected function getList(): array
     {
         return [
-            Registry::ENV    => Environment::class,
-            Registry::LOGGER => Logger::class,
-            Registry::SOCKET => Socket::class,
-            Registry::YML_PARSER => YmlParser::class,
+            Registry::ENV          => Environment::class,
+            Registry::LOGGER       => Logger::class,
+            Registry::SOCKET       => Socket::class,
+            Registry::YML_PARSER   => YmlParser::class,
             Registry::CONF_MANAGER => ConfigManager::class,
-            Registry::SERIALIZER => Serializer::class,
+            Registry::SERIALIZER   => Serializer::class,
         ];
+    }
+
+    public function get($id): ContainerItemInterface
+    {
+        return parent::get($id);
     }
 
     /**

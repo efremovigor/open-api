@@ -2,7 +2,6 @@
 
 namespace Core;
 
-use Core\Container\ContainerItemInterface;
 use Psr\Container\ContainerInterface;
 
 abstract class AbstractRegistry implements ContainerInterface
@@ -28,7 +27,7 @@ abstract class AbstractRegistry implements ContainerInterface
      * @param string $id
      * @return mixed
      */
-    public function get($id): ?ContainerItemInterface
+    public function get($id)
     {
         if (array_key_exists($id, static::$instances)) {
             return static::$instances[$id];

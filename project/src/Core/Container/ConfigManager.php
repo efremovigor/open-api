@@ -10,6 +10,9 @@ namespace Core\Container;
 
 
 use Core\App;
+use Core\Container\Entity\Conf\Base;
+use Core\Container\Entity\Conf\ExternalHostConf;
+use Core\Container\Socket\SocketRequest;
 
 class ConfigManager extends AbstractContainerItem
 {
@@ -30,7 +33,7 @@ class ConfigManager extends AbstractContainerItem
     private $ymlParser;
 
     /**
-     * @var ExternalConf
+     * @var Base
      */
     private $conf;
 
@@ -48,7 +51,7 @@ class ConfigManager extends AbstractContainerItem
     }
 
 
-    public function get(): ExternalConf
+    public function get(): Base
     {
        return $this->conf;
     }
@@ -62,12 +65,17 @@ class ConfigManager extends AbstractContainerItem
         if(!\file_exists($this->getParametersPath())){
             $this->createFileParameters();
         }
-        $this->conf = $this->ymlParser->packPath($this->getParametersPath(),ExternalConf::class);
+        $this->conf = $this->ymlParser->packPath($this->getConfPath(),Base::class);
     }
 
     private function getParametersPath(): string
     {
         return App::getConfDir() . '/parameters.yml';
+    }
+
+    private function getConfPath(): string
+    {
+        return App::getConfDir() . '/conf.yml';
     }
 
     /**
