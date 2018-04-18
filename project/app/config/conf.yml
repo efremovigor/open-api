@@ -1,4 +1,4 @@
 imports:
   - parameters.yml
-  - dev.yml
+  - rewrite.yml
 devEmail: prod@prod.prod
