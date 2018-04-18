@@ -15,6 +15,7 @@ class Base implements PropertyAccessInterface
 {
 
     private $parameters;
+    private $devEmail;
 
     public function __construct()
     {
@@ -23,7 +24,7 @@ class Base implements PropertyAccessInterface
 
     public function getProperties(): array
     {
-        return ['parameters'];
+        return ['parameters','devEmail'];
     }
 
     /**
@@ -40,5 +41,21 @@ class Base implements PropertyAccessInterface
     public function setParameters($parameters): void
     {
         $this->parameters = $parameters;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDevEmail()
+    {
+        return $this->devEmail;
+    }
+
+    /**
+     * @param mixed $dev_email
+     */
+    public function setDevEmail($dev_email): void
+    {
+        $this->devEmail = $dev_email;
     }
 }
