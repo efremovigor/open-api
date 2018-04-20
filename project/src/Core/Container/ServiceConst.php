@@ -8,8 +8,7 @@
 
 namespace Core\Container;
 
-//todo tothink this is not registry - it is constants class
-final class Registry
+final class ServiceConst
 {
     public const ENV = 'environment';
     public const LOGGER = 'logger';
@@ -17,4 +16,5 @@ final class Registry
     public const YML_PARSER = 'yml_parser';
     public const CONF_MANAGER = 'conf_manager';
     public const SERIALIZER = 'serializer';
+    public const CACHE_MAN = 'cache_manager';
 }

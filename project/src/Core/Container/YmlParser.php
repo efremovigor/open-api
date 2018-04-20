@@ -12,14 +12,13 @@ class YmlParser extends AbstractContainerItem
     public function getYml(string $path): array
     {
         if ($this->isFile($path)) {
-            $resource[] = yaml_parse_file($path);
+            $resource = yaml_parse_file($path);
             $place = $this->getPathPlace($path);
-            if (isset($resource[0]['imports']) && \is_array($resource[0]['imports'])) {
-                foreach ($resource[0]['imports'] as $file) {
-                    $resource[] = $this->getYml($place . '/' . $file);
+            if (isset($resource['imports']) && \is_array($resource['imports'])) {
+                foreach ($resource['imports'] as $file) {
+                    $resource = $this->serializer->normalize($this->getYml($place . '/' . $file),$resource);
                 }
             }
-            $resource = array_merge(...$resource);
             return $resource;
         }
         return [];
@@ -37,7 +36,8 @@ class YmlParser extends AbstractContainerItem
 
     public function init(): void
     {
-        $this->serializer = $this->container->get(Registry::SERIALIZER);
+        $this->serializer = $this->container->get(ServiceConst::SERIALIZER);
+        $this->serializer->setRewritable(true);
     }
 
     private function getPathPlace(string $path)

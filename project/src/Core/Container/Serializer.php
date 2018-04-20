@@ -201,7 +201,14 @@ class Serializer extends AbstractContainerItem
                      */
                     case \is_array($source):
                         foreach($source as $key => $element) {
-                            $subject[$key] = $this->normalize($element);
+                            /**
+                             * Если элемент массива - массив, и он определен в субьекте - то лезем внутрь
+                             */
+                            if(\is_array($element) && isset($subject[$key])){
+                                $subject[$key] = $this->normalize($element,$subject[$key]);
+                            }else{
+                                $subject[$key] = $element;
+                            }
                         }
                         break;
                     /**

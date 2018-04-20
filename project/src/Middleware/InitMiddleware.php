@@ -9,7 +9,7 @@
 namespace Middleware;
 
 
-use Core\Container\Registry;
+use Core\Container\ServiceConst;
 use Core\Container\Socket\SocketResponse;
 use Core\Middleware\AbstractMiddleware;
 use Psr\Http\Message\ResponseInterface;
@@ -31,6 +31,7 @@ class InitMiddleware extends AbstractMiddleware
     {
         echo "InitMiddleware - init\r\n";
         $this->initConf();
+        $this->container->get(ServiceConst::CACHE_MAN)->getRedis();
         /**
          * @var $socketResponse SocketResponse
          */
@@ -50,7 +51,7 @@ class InitMiddleware extends AbstractMiddleware
     private function initConf(): void
     {
 
-        $socketResponse = $this->container->get(Registry::CONF_MANAGER)->get();
+        $socketResponse = $this->container->get(ServiceConst::CONF_MANAGER)->get();
         var_dump($socketResponse);
     }
 

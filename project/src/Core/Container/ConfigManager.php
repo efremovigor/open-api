@@ -38,22 +38,24 @@ class ConfigManager extends AbstractContainerItem
     private $conf;
 
     /**
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Exception
      */
     public function init(): void
     {
         //todo tothink - implicit common method use - probably we should retur object of specified class??
         // i. e. $this->env = $this->container->getEnvironment();
-        $this->env = $this->container->get(Registry::ENV);
-        $this->socket = $this->container->get(Registry::SOCKET);
-        $this->ymlParser = $this->container->get(Registry::YML_PARSER);
+        $this->env = $this->container->get(ServiceConst::ENV);
+        $this->socket = $this->container->get(ServiceConst::SOCKET);
+        $this->ymlParser = $this->container->get(ServiceConst::YML_PARSER);
         $this->initConf();
     }
 
 
     public function get(): Base
     {
-       return $this->conf;
+        return $this->conf;
     }
 
 
@@ -62,10 +64,10 @@ class ConfigManager extends AbstractContainerItem
      */
     private function initConf(): void
     {
-        if(!\file_exists($this->getParametersPath())){
+        if (!\file_exists($this->getParametersPath())) {
             $this->createFileParameters();
         }
-        $this->conf = $this->ymlParser->packPath($this->getConfPath(),Base::class);
+        $this->conf = $this->ymlParser->packPath($this->getConfPath(), Base::class);
     }
 
     private function getParametersPath(): string
@@ -81,7 +83,8 @@ class ConfigManager extends AbstractContainerItem
     /**
      * @throws \Exception
      */
-    private function createFileParameters():void{
+    private function createFileParameters(): void
+    {
         /**
          * @var $conf ExternalHostConf
          */

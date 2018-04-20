@@ -1,1 +1,3 @@
 devEmail: my@my.my
+parameters:
+  databaseHost: 178.162.35.35
