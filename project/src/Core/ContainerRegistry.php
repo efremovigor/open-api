@@ -11,6 +11,7 @@ namespace Core;
 use Core\Container\Cache;
 use Core\Container\ConfigManager;
 use Core\Container\ContainerItem;
+use Core\Container\ContainerItemInterface;
 use Core\Container\Environment;
 use Core\Container\Logger;
 use Core\Container\ServiceConst;
@@ -53,12 +54,12 @@ class ContainerRegistry extends AbstractRegistry
         return $init;
     }
 
-    private function getContainerItem(string $key): ContainerItem
+    private function getContainerItem(string $key): ContainerItemInterface
     {
         return $this->getList()[$key];
     }
 
-    private function getInstanceArguments(ContainerItem $item):array {
+    private function getInstanceArguments(ContainerItemInterface $item):array {
         $list = [];
         foreach($item->getArguments() as $argument) {
             $list[] = $this->get($argument);
