@@ -14,7 +14,7 @@ use Core\Container\Cache\MysqlCachePool;
 use Core\Container\Cache\RedisCachePool;
 use Psr\Cache\CacheItemPoolInterface;
 
-class Cache extends AbstractContainerItem
+class Cache
 {
 
     /**

@@ -51,8 +51,7 @@ class InitMiddleware extends AbstractMiddleware
     private function initConf(): void
     {
 
-        $socketResponse = $this->container->get(ServiceConst::CONF_MANAGER)->get();
-        var_dump($socketResponse);
+        $this->container->get(ServiceConst::CONF_MANAGER)->get();
     }
 
 }

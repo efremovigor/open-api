@@ -12,7 +12,7 @@ namespace Core\Container;
 use Core\Container\Socket\SocketRequest;
 use Core\Container\Socket\SocketResponse;
 
-class Socket extends AbstractContainerItem
+class Socket
 {
 
     /**

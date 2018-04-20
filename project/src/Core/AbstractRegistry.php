@@ -13,9 +13,9 @@ abstract class AbstractRegistry implements ContainerInterface
     protected static $instances = [];
 
     /**
-     * @return array
+     * @return array|mixed
      */
-    abstract protected function getList(): array;
+    abstract protected function getList();
 
     /**
      * @param mixed $id

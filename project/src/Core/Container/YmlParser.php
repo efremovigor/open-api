@@ -2,7 +2,7 @@
 
 namespace Core\Container;
 
-class YmlParser extends AbstractContainerItem
+class YmlParser
 {
     /**
      * @var Serializer
@@ -34,9 +34,12 @@ class YmlParser extends AbstractContainerItem
         return file_exists($path) && pathinfo($path)['extension'] === 'yml';
     }
 
-    public function init(): void
+    /**
+     * @param Serializer $serializer
+     */
+    public function __construct(Serializer $serializer)
     {
-        $this->serializer = $this->container->get(ServiceConst::SERIALIZER);
+        $this->serializer = $serializer;
         $this->serializer->setRewritable(true);
     }
 

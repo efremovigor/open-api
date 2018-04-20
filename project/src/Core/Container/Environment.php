@@ -9,7 +9,7 @@
 namespace Core\Container;
 
 
-class Environment extends AbstractContainerItem
+class Environment
 {
     private $env;
 
@@ -42,7 +42,10 @@ class Environment extends AbstractContainerItem
         ];
     }
 
-    public function init(): void
+    /**
+     * Environment constructor.
+     */
+    public function __construct()
     {
         $this->set($_SERVER['ENV']);
     }

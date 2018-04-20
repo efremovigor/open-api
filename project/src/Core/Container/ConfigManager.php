@@ -14,7 +14,7 @@ use Core\Container\Entity\Conf\Base;
 use Core\Container\Entity\Conf\ExternalHostConf;
 use Core\Container\Socket\SocketRequest;
 
-class ConfigManager extends AbstractContainerItem
+class ConfigManager
 {
 
     /**
@@ -38,17 +38,16 @@ class ConfigManager extends AbstractContainerItem
     private $conf;
 
     /**
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \Psr\Container\ContainerExceptionInterface
+     * @param Environment $environment
+     * @param Socket $socket
+     * @param YmlParser $ymlParser
      * @throws \Exception
      */
-    public function init(): void
+    public function __construct(Environment $environment,Socket $socket,YmlParser $ymlParser)
     {
-        //todo tothink - implicit common method use - probably we should retur object of specified class??
-        // i. e. $this->env = $this->container->getEnvironment();
-        $this->env = $this->container->get(ServiceConst::ENV);
-        $this->socket = $this->container->get(ServiceConst::SOCKET);
-        $this->ymlParser = $this->container->get(ServiceConst::YML_PARSER);
+        $this->env = $environment;
+        $this->socket = $socket;
+        $this->ymlParser = $ymlParser;
         $this->initConf();
     }
 

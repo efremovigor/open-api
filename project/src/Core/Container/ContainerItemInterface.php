@@ -8,12 +8,9 @@
 
 namespace Core\Container;
 
-
-use Psr\Container\ContainerInterface;
-
 interface ContainerItemInterface
 {
-    public function __construct(ContainerInterface $container);
+    public function getClass():string ;
 
-    public function init():void;
+    public function getArguments():array;
 }

@@ -2,6 +2,8 @@
 
 namespace Core\Container;
 
+use Core\Container\Entity\PropertyAccessInterface;
+
 
 /**
  * todo:много копипаста, нужна оптимизация на уровне Symfony
@@ -9,7 +11,7 @@ namespace Core\Container;
  * Class Serializer
  * @package Helpers
  */
-class Serializer extends AbstractContainerItem
+class Serializer
 {
 
     /**
@@ -153,23 +155,23 @@ class Serializer extends AbstractContainerItem
                      * object -> array
                      */
                     case \is_object($source) && $source instanceOf PropertyAccessInterface:
-                        if($subject === null){
+                        if($subject === null) {
                             $subject = [];
                         }
                         foreach($source->getProperties() as $property) {
-                            if(!array_key_exists($property,$subject)){
+                            if(!array_key_exists($property, $subject)) {
                                 $subject[$property] = null;
                             }
                             $getMethod = $this->getMethod($property);
 
                             if(\is_array($source->$getMethod())) {
 
-                                if(!empty($subject[$property])){
+                                if(!empty($subject[$property])) {
                                     if($this->addable === false && \count($source->$getMethod()) > 0) {
                                         continue;
                                     }
-                                    $subject[$property] = array_merge($source->$getMethod(),$subject[$property]);
-                                }else{
+                                    $subject[$property] = array_merge($source->$getMethod(), $subject[$property]);
+                                } else {
                                     $subject[$property] = $source->$getMethod();
                                 }
                                 continue;
@@ -204,9 +206,9 @@ class Serializer extends AbstractContainerItem
                             /**
                              * Если элемент массива - массив, и он определен в субьекте - то лезем внутрь
                              */
-                            if(\is_array($element) && isset($subject[$key])){
-                                $subject[$key] = $this->normalize($element,$subject[$key]);
-                            }else{
+                            if(\is_array($element) && isset($subject[$key])) {
+                                $subject[$key] = $this->normalize($element, $subject[$key]);
+                            } else {
                                 $subject[$key] = $element;
                             }
                         }

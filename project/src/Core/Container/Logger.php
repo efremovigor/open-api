@@ -10,7 +10,7 @@ namespace Core\Container;
 
 use Psr\Log\LoggerInterface;
 
-class Logger extends AbstractContainerItem implements LoggerInterface
+class Logger implements LoggerInterface
 {
 
     /**

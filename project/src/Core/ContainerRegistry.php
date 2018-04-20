@@ -10,7 +10,7 @@ namespace Core;
 
 use Core\Container\Cache;
 use Core\Container\ConfigManager;
-use Core\Container\ContainerItemInterface;
+use Core\Container\ContainerItem;
 use Core\Container\Environment;
 use Core\Container\Logger;
 use Core\Container\ServiceConst;
@@ -27,33 +27,42 @@ class ContainerRegistry extends AbstractRegistry
     protected function getList(): array
     {
         return [
-            ServiceConst::ENV          => Environment::class,
-            ServiceConst::LOGGER       => Logger::class,
-            ServiceConst::SOCKET       => Socket::class,
-            ServiceConst::YML_PARSER   => YmlParser::class,
-            ServiceConst::CONF_MANAGER => ConfigManager::class,
-            ServiceConst::SERIALIZER   => Serializer::class,
-            ServiceConst::CACHE_MAN    => Cache::class,
+            ServiceConst::ENV          => new ContainerItem(Environment::class),
+            ServiceConst::LOGGER       => new ContainerItem(Logger::class),
+            ServiceConst::SOCKET       => new ContainerItem(Socket::class),
+            ServiceConst::YML_PARSER   => new ContainerItem(YmlParser::class, [ServiceConst::SERIALIZER]),
+            ServiceConst::CONF_MANAGER => new ContainerItem(
+                ConfigManager::class,
+                [ServiceConst::ENV, ServiceConst::SOCKET, ServiceConst::YML_PARSER]
+            ),
+            ServiceConst::SERIALIZER   => new ContainerItem(Serializer::class),
+            ServiceConst::CACHE_MAN    => new ContainerItem(Cache::class),
         ];
-    }
-
-    public function get($id): ContainerItemInterface
-    {
-        return parent::get($id);
     }
 
     /**
      * @param mixed $id
      * @return mixed
      */
-    protected function createInstance($id): ContainerItemInterface
+    protected function createInstance($id)
     {
-        $class = $this->getList()[$id];
-        /**
-         * @var $init ContainerItemInterface
-         */
-        $init = new $class($this);
-        $init->init();
+        $containerItem = $this->getContainerItem($id);
+        $name = $containerItem->getClass();
+        $init = new $name(...$this->getInstanceArguments($containerItem));
+
         return $init;
+    }
+
+    private function getContainerItem(string $key): ContainerItem
+    {
+        return $this->getList()[$key];
+    }
+
+    private function getInstanceArguments(ContainerItem $item):array {
+        $list = [];
+        foreach($item->getArguments() as $argument) {
+            $list[] = $this->get($argument);
+        }
+        return $list;
     }
 }
