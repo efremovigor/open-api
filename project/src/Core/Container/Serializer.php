@@ -38,19 +38,19 @@ class Serializer
                      * object -> object
                      */
                     case \is_object($source) && $source instanceOf PropertyAccessInterface:
-                        $this->objectToObject($source, $subject,$params);
+                        $this->objectToObject($source, $subject, $params);
                         break;
                     /**
                      * array -> object
                      */
                     case \is_array($source):
-                        $this->arrayToObject($source,$subject,$params);
+                        $this->arrayToObject($source, $subject, $params);
                         break;
                     /**
                      * json -> object
                      */
                     case $this->is_json($source):
-                        $this->normalize(json_decode($source, true), $subject,$params);
+                        $this->normalize(json_decode($source, true), $subject, $params);
                         break;
                 }
                 break;
@@ -59,7 +59,7 @@ class Serializer
              */
             case \is_string($subject):
                 if(class_exists($subject)) {
-                    $subject = $this->normalize($source, new $subject(),$params);
+                    $subject = $this->normalize($source, new $subject(), $params);
                 }
                 break;
             case \is_array($subject) || $subject === null:
@@ -68,7 +68,7 @@ class Serializer
                      * object -> array
                      */
                     case \is_object($source) && $source instanceOf PropertyAccessInterface:
-                        $this->objectToArray($source,$subject,$params);
+                        $this->objectToArray($source, $subject, $params);
                         break;
                     /**
                      * array -> array
@@ -79,7 +79,7 @@ class Serializer
                              * Если элемент массива - массив, и он определен в субьекте - то лезем внутрь
                              */
                             if(\is_array($element) && isset($subject[$key])) {
-                                $subject[$key] = $this->normalize($element, $subject[$key],$params);
+                                $subject[$key] = $this->normalize($element, $subject[$key], $params);
                             } else {
                                 $subject[$key] = $element;
                             }
@@ -107,6 +107,9 @@ class Serializer
     public function serialize($source, string $type = 'json')
     {
         switch(true) {
+            /**
+             * превращаем в массив, и проваливаемся в следующий кейс.
+             */
             case \is_object($source) && $source instanceOf PropertyAccessInterface:
                 $source = $this->normalize($source);
             case \is_array($source):
@@ -127,7 +130,7 @@ class Serializer
      * @param array $params
      * @return void
      */
-    private function objectToObject(PropertyAccessInterface $source, object &$subject, array $params = []): void
+    private function objectToObject(PropertyAccessInterface $source, &$subject, array $params = []): void
     {
         foreach($source->getProperties() as $property) {
             $setMethod = $this->setMethod($property);
@@ -175,7 +178,7 @@ class Serializer
         }
     }
 
-    private function arrayToObject(array $source, object &$subject, array $params = [])
+    private function arrayToObject(array $source, &$subject, array $params = [])
     {
         foreach($source as $key => $value) {
             $setMethod = $this->setMethod($key);
@@ -218,7 +221,8 @@ class Serializer
         }
     }
 
-    private function objectToArray(PropertyAccessInterface $source,array &$subject = [], array $params = []){
+    private function objectToArray(PropertyAccessInterface $source, array &$subject = [], array $params = [])
+    {
         foreach($source->getProperties() as $property) {
             if(!array_key_exists($property, $subject)) {
                 $subject[$property] = null;
