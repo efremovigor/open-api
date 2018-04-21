@@ -141,9 +141,4 @@ class Logger implements LoggerInterface
     {
         // TODO: Implement log() method.
     }
-
-    public function init(): void
-    {
-        // TODO: Implement init() method.
-    }
 }

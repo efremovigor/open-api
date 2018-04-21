@@ -15,30 +15,22 @@ class Serializer
 {
 
     /**
-     * Обнулять параметрами из источника
-     * @var bool $nullable
+     * nullable - Обнулять параметрами из источника
+     * rewritable - Перезаписывать параметрами из источника
+     * addable - Добавлять параметрами источника, если субьект имеет, что-то у себя
      */
-    private $nullable = false;
-
-    /**
-     * Перезаписывать параметрами из источника
-     * @var bool $rewritable
-     */
-    private $rewritable = false;
-
-    /**
-     * Добавлять параметрами источника, если субьект имеет, что-то у себя
-     * @var bool
-     */
-    private $addable = true;
+    public const ADDABLE    = 'addable';
+    public const REWRITABLE = 'rewritable';
+    public const NULLABLE   = 'nullable';
 
     /**
      * Десериализует данные
      * @param $source
      * @param $subject
+     * @param array $params
      * @return mixed
      */
-    public function normalize($source, $subject = null)
+    public function normalize($source, $subject = null, array $params = [self::ADDABLE])
     {
         switch(true) {
             case \is_object($subject):
@@ -58,7 +50,7 @@ class Serializer
                                 \is_array($source->$getMethod()) &&
                                 method_exists($subject, $addMethod)
                             ) {
-                                if($this->addable === false && \count($source->$getMethod()) > 0) {
+                                if($this->isAddable($params) === false && \count($source->$getMethod()) > 0) {
                                     continue;
                                 }
                                 foreach($source->$getMethod() as $subValue) {
@@ -81,10 +73,10 @@ class Serializer
                              * Простой сет свойства, если они совпадают по имени
                              */
                             if(method_exists($subject, $setMethod)) {
-                                if($this->nullable === false && $source->$getMethod() === null) {
+                                if($this->isNullable($params) === false && $source->$getMethod() === null) {
                                     continue;
                                 }
-                                if($this->rewritable === false && $subject->$getMethod() !== null) {
+                                if($this->isRewritable($params) === false && $subject->$getMethod() !== null) {
                                     continue;
                                 }
                                 $subject->$setMethod($source->$getMethod());
@@ -103,7 +95,7 @@ class Serializer
                             /**
                              */
                             if(\is_array($value) && method_exists($subject, $addMethod)) {
-                                if($this->addable === false && \count($value) > 0) {
+                                if($this->isAddable($params) === false && \count($value) > 0) {
                                     continue;
                                 }
                                 foreach($value as $subValue) {
@@ -125,10 +117,10 @@ class Serializer
                              * Простой сет свойства, если они совпадают по имени
                              */
                             if(method_exists($subject, $setMethod)) {
-                                if($this->nullable === false && $value === null) {
+                                if($this->isNullable($params) === false && $value === null) {
                                     continue;
                                 }
-                                if($this->rewritable === false && $subject->$getMethod() !== null) {
+                                if($this->isRewritable($params) === false && $subject->$getMethod() !== null) {
                                     continue;
                                 }
                                 $subject->$setMethod($value);
@@ -167,7 +159,7 @@ class Serializer
                             if(\is_array($source->$getMethod())) {
 
                                 if(!empty($subject[$property])) {
-                                    if($this->addable === false && \count($source->$getMethod()) > 0) {
+                                    if($this->isAddable($params) === false && \count($source->$getMethod()) > 0) {
                                         continue;
                                     }
                                     $subject[$property] = array_merge($source->$getMethod(), $subject[$property]);
@@ -188,10 +180,10 @@ class Serializer
                             /**
                              * Простой сет свойства, если они совпадают по имени
                              */
-                            if($this->nullable === false && $source->$getMethod() === null) {
+                            if($this->isNullable($params) === false && $source->$getMethod() === null) {
                                 continue;
                             }
-                            if($this->rewritable === false && $subject[$property] !== null) {
+                            if($this->isRewritable($params) === false && $subject[$property] !== null) {
                                 continue;
                             }
                             $subject[$property] = $source->$getMethod();
@@ -289,31 +281,29 @@ class Serializer
     }
 
     /**
-     * @param bool $nullable
+     * @param array $params
+     * @return bool
      */
-    public function setNullable(bool $nullable): void
+    private function isNullable(array $params): bool
     {
-        $this->nullable = $nullable;
+        return array_key_exists(static::NULLABLE, $params);
     }
 
     /**
-     * @param bool $rewritable
+     * @param array $params
+     * @return bool
      */
-    public function setRewritable(bool $rewritable): void
+    private function isRewritable(array $params): bool
     {
-        $this->rewritable = $rewritable;
+        return array_key_exists(static::REWRITABLE, $params);
     }
 
     /**
-     * @param bool $addable
+     * @param array $params
+     * @return bool
      */
-    public function setAddable(bool $addable): void
+    private function isAddable(array $params): bool
     {
-        $this->addable = $addable;
-    }
-
-    public function init(): void
-    {
-        // TODO: Implement init() method.
+        return array_key_exists(static::ADDABLE, $params);
     }
 }

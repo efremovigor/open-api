@@ -32,11 +32,6 @@ class Cache
      */
     private $mysqlPool;
 
-    public function init(): void
-    {
-        // TODO: Implement init() method.
-    }
-
     /**
      * @return CacheItemPoolInterface
      */
