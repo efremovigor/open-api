@@ -11,11 +11,11 @@ class YmlParser
 
     public function getYml(string $path): array
     {
-        if($this->isFile($path)) {
+        if ($this->isFile($path)) {
             $resource = yaml_parse_file($path);
-            $place    = $this->getPathPlace($path);
-            if(isset($resource['imports']) && \is_array($resource['imports'])) {
-                foreach($resource['imports'] as $file) {
+            $place = $this->getPathPlace($path);
+            if (isset($resource['imports']) && \is_array($resource['imports'])) {
+                foreach ($resource['imports'] as $file) {
                     $resource = $this->serializer->normalize(
                         $this->getYml($place . '/' . $file),
                         $resource,
@@ -32,7 +32,7 @@ class YmlParser
 
     public function packPath(string $path, string $class)
     {
-        return $this->serializer->normalize($this->getYml($path), $class);
+        return $this->serializer->normalize($this->getYml($path), $class, [Serializer::REWRITABLE, Serializer::ADDABLE]);
     }
 
     private function isFile(string $path): bool
@@ -48,7 +48,7 @@ class YmlParser
         $this->serializer = $serializer;
     }
 
-    private function getPathPlace(string $path)
+    private function getPathPlace(string $path): string
     {
         $place = explode('/', $path);
         array_pop($place);

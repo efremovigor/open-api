@@ -49,9 +49,7 @@ class ContainerRegistry extends AbstractRegistry
     {
         $containerItem = $this->getContainerItem($id);
         $name = $containerItem->getClass();
-        $init = new $name(...$this->getInstanceArguments($containerItem));
-
-        return $init;
+        return new $name(...$this->getInstanceArguments($containerItem));
     }
 
     private function getContainerItem(string $key): ContainerItemInterface

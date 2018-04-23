@@ -24,16 +24,16 @@ class Serializer
 
     /**
      * Десериализует данные
-     * @param $source
-     * @param $subject
+     * @param       $source
+     * @param       $subject
      * @param array $params
      * @return mixed
      */
     public function normalize($source, $subject = null, array $params = [self::ADDABLE])
     {
-        switch(true) {
+        switch (true) {
             case \is_object($subject):
-                switch(true) {
+                switch (true) {
                     /**
                      * object -> object
                      */
@@ -58,12 +58,12 @@ class Serializer
              * Создает класс по имени и рекурсивно вызываем
              */
             case \is_string($subject):
-                if(class_exists($subject)) {
+                if (class_exists($subject)) {
                     $subject = $this->normalize($source, new $subject(), $params);
                 }
                 break;
             case \is_array($subject) || $subject === null:
-                switch(true) {
+                switch (true) {
                     /**
                      * object -> array
                      */
@@ -74,11 +74,11 @@ class Serializer
                      * array -> array
                      */
                     case \is_array($source):
-                        foreach($source as $key => $element) {
+                        foreach ($source as $key => $element) {
                             /**
                              * Если элемент массива - массив, и он определен в субьекте - то лезем внутрь
                              */
-                            if(\is_array($element) && isset($subject[$key])) {
+                            if (\is_array($element) && isset($subject[$key])) {
                                 $subject[$key] = $this->normalize($element, $subject[$key], $params);
                             } else {
                                 $subject[$key] = $element;
@@ -100,20 +100,20 @@ class Serializer
     }
 
     /**
-     * @param $source
+     * @param        $source
      * @param string $type
      * @return mixed
      */
     public function serialize($source, string $type = 'json')
     {
-        switch(true) {
+        switch (true) {
             /**
              * превращаем в массив, и проваливаемся в следующий кейс.
              */
             case \is_object($source) && $source instanceOf PropertyAccessInterface:
                 $source = $this->normalize($source);
             case \is_array($source):
-                if($type === 'json') {
+                if ($type === 'json') {
                     $source = json_encode($source, true);
                 }
                 break;
@@ -126,27 +126,26 @@ class Serializer
     /**
      * Переливает обьект в обьект
      * @param PropertyAccessInterface $source
-     * @param object $subject
+     * @param mixed $subject
      * @param array $params
      * @return void
      */
     private function objectToObject(PropertyAccessInterface $source, &$subject, array $params = []): void
     {
-        foreach($source->getProperties() as $property) {
+        foreach ($source->getProperties() as $property) {
             $setMethod = $this->setMethod($property);
             $addMethod = $this->addMethod($property);
             $getMethod = $this->getMethod($property);
             /**
              * Добавляет элементы если свойство в объекте - это массив
              */
-            if(method_exists($source, $getMethod) &&
+            if (method_exists($source, $getMethod) &&
                 \is_array($source->$getMethod()) &&
-                method_exists($subject, $addMethod)
-            ) {
-                if($this->isAddable($params) === false && \count($source->$getMethod()) > 0) {
+                method_exists($subject, $addMethod)) {
+                if ($this->isAddable($params) === false && \count($source->$getMethod()) > 0) {
                     continue;
                 }
-                foreach($source->$getMethod() as $subValue) {
+                foreach ((array)$source->$getMethod() as $subValue) {
                     $subject->$addMethod($subValue);
                 }
                 continue;
@@ -154,7 +153,7 @@ class Serializer
             /**
              * Рекурсивно вызывается,если св-во subject является обьектом
              */
-            if(method_exists($source, $getMethod) &&
+            if (method_exists($source, $getMethod) &&
                 method_exists($subject, $getMethod) &&
                 \is_object($subject->$getMethod()) &&
                 (\is_array($source->$getMethod()) || \is_object($source->$getMethod()))
@@ -165,11 +164,11 @@ class Serializer
             /**
              * Простой сет свойства, если они совпадают по имени
              */
-            if(method_exists($subject, $setMethod)) {
-                if($this->isNullable($params) === false && $source->$getMethod() === null) {
+            if (method_exists($subject, $setMethod)) {
+                if ($this->isNullable($params) === false && $source->$getMethod() === null) {
                     continue;
                 }
-                if($this->isRewritable($params) === false && $subject->$getMethod() !== null) {
+                if ($this->isRewritable($params) === false && $subject->$getMethod() !== null) {
                     continue;
                 }
                 $subject->$setMethod($source->$getMethod());
@@ -178,19 +177,24 @@ class Serializer
         }
     }
 
-    private function arrayToObject(array $source, &$subject, array $params = [])
+    /**
+     * @param array $source
+     * @param mixed $subject
+     * @param array $params
+     */
+    private function arrayToObject(array $source, &$subject, array $params = []): void
     {
-        foreach($source as $key => $value) {
+        foreach ($source as $key => $value) {
             $setMethod = $this->setMethod($key);
             $addMethod = $this->addMethod($key);
             $getMethod = $this->getMethod($key);
             /**
              */
-            if(\is_array($value) && method_exists($subject, $addMethod)) {
-                if($this->isAddable($params) === false && \count($value) > 0) {
+            if (\is_array($value) && method_exists($subject, $addMethod)) {
+                if ($this->isAddable($params) === false && \count($value) > 0) {
                     continue;
                 }
-                foreach($value as $subValue) {
+                foreach ($value as $subValue) {
                     $subject->$addMethod($subValue);
                 }
                 continue;
@@ -198,7 +202,7 @@ class Serializer
             /**
              * Рекурсивно вызывается,если св-во subject является обьектом
              */
-            if((\is_array($value) || \is_object($value)) &&
+            if ((\is_array($value) || \is_object($value)) &&
                 method_exists($subject, $getMethod) &&
                 \is_object($subject->$getMethod())
             ) {
@@ -208,11 +212,11 @@ class Serializer
             /**
              * Простой сет свойства, если они совпадают по имени
              */
-            if(method_exists($subject, $setMethod)) {
-                if($this->isNullable($params) === false && $value === null) {
+            if (method_exists($subject, $setMethod)) {
+                if ($value === null && $this->isNullable($params) === false) {
                     continue;
                 }
-                if($this->isRewritable($params) === false && $subject->$getMethod() !== null) {
+                if ($this->isRewritable($params) === false && $subject->$getMethod() !== null) {
                     continue;
                 }
                 $subject->$setMethod($value);
@@ -221,18 +225,23 @@ class Serializer
         }
     }
 
-    private function objectToArray(PropertyAccessInterface $source, array &$subject = [], array $params = [])
+    /**
+     * @param PropertyAccessInterface $source
+     * @param array $subject
+     * @param array $params
+     */
+    private function objectToArray(PropertyAccessInterface $source, array &$subject = [], array $params = []): void
     {
-        foreach($source->getProperties() as $property) {
-            if(!array_key_exists($property, $subject)) {
+        foreach ($source->getProperties() as $property) {
+            if (!array_key_exists($property, $subject)) {
                 $subject[$property] = null;
             }
             $getMethod = $this->getMethod($property);
 
-            if(\is_array($source->$getMethod())) {
+            if (\is_array($source->$getMethod())) {
 
-                if(!empty($subject[$property])) {
-                    if($this->isAddable($params) === false && \count($source->$getMethod()) > 0) {
+                if (!empty($subject[$property])) {
+                    if ($this->isAddable($params) === false && \count($source->$getMethod()) > 0) {
                         continue;
                     }
                     $subject[$property] = array_merge($source->$getMethod(), $subject[$property]);
@@ -244,7 +253,7 @@ class Serializer
             /**
              * Рекурсивно вызывается,если св-во subject является обьектом
              */
-            if(method_exists($source, $getMethod) &&
+            if (method_exists($source, $getMethod) &&
                 (\is_array($source->$getMethod()) || \is_object($source->$getMethod()))
             ) {
                 $subject[$property] = $this->normalize($source->$getMethod(), $subject[$property]);
@@ -253,10 +262,10 @@ class Serializer
             /**
              * Простой сет свойства, если они совпадают по имени
              */
-            if($this->isNullable($params) === false && $source->$getMethod() === null) {
+            if ($this->isNullable($params) === false && $source->$getMethod() === null) {
                 continue;
             }
-            if($this->isRewritable($params) === false && $subject[$property] !== null) {
+            if ($subject[$property] !== null && $this->isRewritable($params) === false) {
                 continue;
             }
             $subject[$property] = $source->$getMethod();
