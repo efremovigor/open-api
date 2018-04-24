@@ -10,6 +10,9 @@ namespace Core\Middleware;
 
 
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Message\ResponseInterface;
 
 abstract class AbstractMiddleware implements MiddlewareInterface
 {
@@ -23,6 +26,21 @@ abstract class AbstractMiddleware implements MiddlewareInterface
     protected $container;
 
     /**
+     * @var ServerRequestInterface
+     */
+    protected $request;
+
+    /**
+     * @var RequestHandlerInterface
+     */
+    protected $handler;
+
+    /**
+     * @var ResponseInterface
+     */
+    protected $response;
+
+    /**
      * AbstractMiddleware constructor.
      * @param MiddlewareSplQueue $middlewareCollection
      * @param ContainerInterface $container
@@ -32,4 +50,34 @@ abstract class AbstractMiddleware implements MiddlewareInterface
         $this->middlewareCollection = $middlewareCollection;
         $this->container = $container;
     }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @param RequestHandlerInterface $handler
+     * @return ResponseInterface
+     */
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        $this->request = $request;
+        $this->handler = $handler;
+
+        try {
+            $this->before();
+            $this->response = $handler->handle($request);
+            $this->after();
+        } catch (\Exception $exception) {
+            $exception->getMessage();
+        }
+
+        return $this->response;
+    }
+
+    protected function before(): void
+    {
+    }
+
+    protected function after(): void
+    {
+    }
+
 }

@@ -37,7 +37,6 @@ class RequestHandler implements RequestHandlerInterface
     public function registerMiddlewares(): array
     {
         return [
-            \Middleware\TryMiddleware::class,
             \Middleware\ProfilerMiddleware::class,
             \Middleware\InitMiddleware::class,
             \Middleware\DebugMiddleware::class,
