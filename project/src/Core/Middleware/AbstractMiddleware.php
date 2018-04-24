@@ -67,7 +67,7 @@ abstract class AbstractMiddleware implements MiddlewareInterface
 
         try {
             $this->before();
-            $this->addResponseNext();
+            $this->pushResponseNext();
             $this->response = $handler->handle($request);
             $this->after();
         } catch (\Exception $exception) {
@@ -77,7 +77,7 @@ abstract class AbstractMiddleware implements MiddlewareInterface
         return $this->response;
     }
 
-    private function addResponseNext(): void
+    private function pushResponseNext(): void
     {
         $nextMiddleware = $this->middlewareCollection->current();
         if ($nextMiddleware !== null) {
