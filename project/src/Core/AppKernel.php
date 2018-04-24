@@ -8,39 +8,54 @@
 
 namespace Core;
 
-abstract class AppKernel
+abstract class AppKernel extends Kernel
 {
+
     /**
-     * @return string
+     * @var RequestHandler
      */
-    public static function getConfDir(): string
+    private $requestHandler;
+
+    /**
+     * @var ContainerRegistry
+     */
+    private $container;
+
+    /**
+     * AppKernel constructor.
+     */
+    public function __construct()
     {
-        //todo think maybe better use path as parameter - self::getRootDir('/app/config') ??
-        return self::getRootDir().'/app/config';
+        $this->init();
+    }
+
+    public function run(): void
+    {
+        $this->requestHandler->process();
+    }
+
+    private function init(): void
+    {
+        $this->container = new ContainerRegistry($this->getServices());
+        $this->requestHandler = new RequestHandler($this);
     }
 
     /**
-     * @return string
+     * @return ContainerRegistry
      */
-    public static function getRootDir(): string
+    public function getContainer(): ContainerRegistry
     {
-        return  __DIR__ . '/../..';
+        return $this->container;
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public static function getCacheDir(): string
-    {
-        return self::getRootDir() . '/var/cache';
-    }
+    abstract public function getMiddlewares(): array;
 
     /**
-     * @return string
+     * @return array
      */
-    public static function getLogDir(): string
-    {
-        return self::getRootDir() . '/var/logs';
-    }
+    abstract public function getServices(): array;
 
 }

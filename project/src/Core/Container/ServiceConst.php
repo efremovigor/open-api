@@ -17,4 +17,5 @@ final class ServiceConst
     public const CONF_MANAGER = 'conf_manager';
     public const SERIALIZER = 'serializer';
     public const CACHE_MAN = 'cache_manager';
+    public const MIDDLEWARES = 'middlewares_manager';
 }

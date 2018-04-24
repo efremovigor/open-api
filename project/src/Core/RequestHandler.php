@@ -8,8 +8,8 @@
 
 namespace Core;
 
+use Core\Container\ServiceConst;
 use Core\Middleware\MiddlewareSplQueue;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -31,27 +31,15 @@ class RequestHandler implements RequestHandlerInterface
      */
     private $response;
 
-    /**
-     * @return MiddlewareInterface[]
-     */
-    public function registerMiddlewares(): array
-    {
-        return [
-            \Middleware\ProfilerMiddleware::class,
-            \Middleware\InitMiddleware::class,
-            \Middleware\DebugMiddleware::class,
-            \Middleware\RouterMiddleware::class,
-            \Middleware\ControllerMiddleware::class,
-            \Middleware\ResponseMiddleware::class,
-            \Middleware\TerminateMiddleware::class,
-        ];
-    }
-
-    public function __construct()
+    public function __construct(AppKernel $app)
     {
         $this->request = new Request();
-        //todo tothink probably we should to create Response here?
-        $this->middlewares = new MiddlewareSplQueue($this->registerMiddlewares(),new ContainerRegistry());
+
+        /**
+         * @var MiddlewareSplQueue
+         */
+        $this->middlewares = $app->getContainer()->get(ServiceConst::MIDDLEWARES);
+        $this->middlewares->pushList($app->getMiddlewares());
     }
 
     /**

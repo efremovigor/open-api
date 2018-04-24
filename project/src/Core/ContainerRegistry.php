@@ -8,37 +8,30 @@
 
 namespace Core;
 
-use Core\Container\Cache;
-use Core\Container\ConfigManager;
 use Core\Container\ContainerItem;
 use Core\Container\ContainerItemInterface;
-use Core\Container\Environment;
-use Core\Container\Logger;
-use Core\Container\ServiceConst;
-use Core\Container\Serializer;
-use Core\Container\Socket;
-use Core\Container\YmlParser;
 
 class ContainerRegistry extends AbstractRegistry
 {
+    public const CONTAINER = 'container';
+
+    /**
+     * @var ContainerItem[]
+     */
+    private $services;
 
     /**
      * @return array
      */
     protected function getList(): array
     {
-        return [
-            ServiceConst::ENV          => new ContainerItem(Environment::class),
-            ServiceConst::LOGGER       => new ContainerItem(Logger::class),
-            ServiceConst::SOCKET       => new ContainerItem(Socket::class),
-            ServiceConst::YML_PARSER   => new ContainerItem(YmlParser::class, [ServiceConst::SERIALIZER]),
-            ServiceConst::CONF_MANAGER => new ContainerItem(
-                ConfigManager::class,
-                [ServiceConst::ENV, ServiceConst::SOCKET, ServiceConst::YML_PARSER]
-            ),
-            ServiceConst::SERIALIZER   => new ContainerItem(Serializer::class),
-            ServiceConst::CACHE_MAN    => new ContainerItem(Cache::class),
-        ];
+        return $this->services;
+    }
+
+    public function __construct(array $services)
+    {
+        $this->services = $services;
+        self::$instances[self::CONTAINER] = $this;
     }
 
     /**
@@ -57,9 +50,10 @@ class ContainerRegistry extends AbstractRegistry
         return $this->getList()[$key];
     }
 
-    private function getInstanceArguments(ContainerItemInterface $item):array {
+    private function getInstanceArguments(ContainerItemInterface $item): array
+    {
         $list = [];
-        foreach($item->getArguments() as $argument) {
+        foreach ($item->getArguments() as $argument) {
             $list[] = $this->get($argument);
         }
         return $list;

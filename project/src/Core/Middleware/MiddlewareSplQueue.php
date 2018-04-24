@@ -21,13 +21,19 @@ class MiddlewareSplQueue extends \SplQueue
 
     /**
      * MiddlewareCollection constructor.
-     * @param array $elements
      * @param ContainerInterface $container
      */
-    public function __construct(array $elements = [], ContainerInterface $container)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        foreach ($elements as $name) {
+    }
+
+    /**
+     * @param array $middlewares
+     */
+    public function pushList(array $middlewares): void
+    {
+        foreach ($middlewares as $name) {
             $this->push($this->createMiddleware($name));
         }
     }

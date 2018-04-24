@@ -34,7 +34,10 @@ class Socket
         $response = new SocketResponse();
         fwrite($connect, $out);
         while(!feof($connect)) {
-            $response->add(fread($connect, 128));
+            $string = fread($connect, 128);
+            if(!\is_string($string)){
+                $response->add($string);
+            }
         }
         fclose($connect);
 
