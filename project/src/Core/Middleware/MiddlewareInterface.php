@@ -9,7 +9,11 @@
 namespace Core\Middleware;
 
 
+use Psr\Http\Message\ResponseInterface;
+
 interface MiddlewareInterface extends \Psr\Http\Server\MiddlewareInterface
 {
     public function getName(): string;
+
+    public function setResponse(ResponseInterface $response): void;
 }

@@ -85,4 +85,10 @@ class MiddlewareSplQueue extends \SplQueue
     {
         return new $name($this, $this->container);
     }
+
+    public function current(): ?\Core\Middleware\MiddlewareInterface
+    {
+        $this->rewind();
+        return parent::current();
+    }
 }

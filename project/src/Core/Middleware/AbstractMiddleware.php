@@ -9,6 +9,7 @@
 namespace Core\Middleware;
 
 
+use Core\Response;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -52,7 +53,7 @@ abstract class AbstractMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param ServerRequestInterface  $request
      * @param RequestHandlerInterface $handler
      * @return ResponseInterface
      */
@@ -60,9 +61,13 @@ abstract class AbstractMiddleware implements MiddlewareInterface
     {
         $this->request = $request;
         $this->handler = $handler;
+        if ($this->response === null) {
+            $this->response = new Response();
+        }
 
         try {
             $this->before();
+            $this->addResponseNext();
             $this->response = $handler->handle($request);
             $this->after();
         } catch (\Exception $exception) {
@@ -70,6 +75,19 @@ abstract class AbstractMiddleware implements MiddlewareInterface
         }
 
         return $this->response;
+    }
+
+    private function addResponseNext(): void
+    {
+        $nextMiddleware = $this->middlewareCollection->current();
+        if ($nextMiddleware !== null) {
+            $nextMiddleware->setResponse($this->response);
+        }
+    }
+
+    public function setResponse(ResponseInterface $response): void
+    {
+        $this->response = $response;
     }
 
     protected function before(): void

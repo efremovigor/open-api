@@ -91,6 +91,9 @@ class ConfigManager
         $request = new SocketRequest($conf->getServer(), $conf->getUrl());
         $request->setTimeout(2);
         $parameters = $this->socket->call($request);
+        if(empty($parameters->getBody())){
+            throw new \Exception('Invalid file parameters');
+        }
         \file_put_contents($this->getParametersPath(), $parameters->getBody());
     }
 }
