@@ -320,7 +320,7 @@ class Serializer
      */
     private function isNullable(array $params): bool
     {
-        return array_key_exists(static::NULLABLE, $params);
+        return \in_array(static::NULLABLE, $params, true);
     }
 
     /**
@@ -329,7 +329,7 @@ class Serializer
      */
     private function isRewritable(array $params): bool
     {
-        return array_key_exists(static::REWRITABLE, $params);
+        return \in_array(static::REWRITABLE, $params, true);
     }
 
     /**
@@ -338,6 +338,6 @@ class Serializer
      */
     private function isAddable(array $params): bool
     {
-        return array_key_exists(static::ADDABLE, $params);
+        return \in_array(static::ADDABLE, $params, true);
     }
 }
