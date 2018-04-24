@@ -10,23 +10,16 @@ namespace Middleware;
 
 
 use Core\Middleware\AbstractMiddleware;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
 class ProfilerMiddleware extends AbstractMiddleware
 {
 
     /**
-     * Process an incoming server request and return a response, optionally delegating
-     * response creation to a handler.
-     * @param ServerRequestInterface  $request
-     * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    protected function before(): void
     {
-        return $handler->handle($request);
+        echo "ProfilerMiddleware - init\r\n";
     }
 
     public function getName(): string
