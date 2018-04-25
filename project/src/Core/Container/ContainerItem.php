@@ -25,7 +25,7 @@ class ContainerItem implements ContainerItemInterface
     {
 
         $this->class = $class;
-        $this->arg   = $arg;
+        $this->arg = $arg;
     }
 
     public function getClass(): string

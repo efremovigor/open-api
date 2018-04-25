@@ -25,17 +25,17 @@ class Socket
         //todo tothink - every call will create a new socket??
         $connect = stream_socket_client($request->getHost() . ':' . $request->getPort(), $errno, $errstr);
         stream_set_timeout($connect, $request->getTimeout());
-        if(false === $connect) {
+        if (false === $connect) {
             throw new \RuntimeException($request->getHost() . ':' . $request->getPort() . ' - not connect');
         }
-        $out      = $request->getMethod() . ' ' . $request->getUrl() . ' ' . $request->getHttpVersion() . "\r\n";
-        $out      .= 'Host: ' . $request->getHost() . "\r\n";
-        $out      .= "Connection: Close\r\n\r\n";
+        $out = $request->getMethod() . ' ' . $request->getUrl() . ' ' . $request->getHttpVersion() . "\r\n";
+        $out .= 'Host: ' . $request->getHost() . "\r\n";
+        $out .= "Connection: Close\r\n\r\n";
         $response = new SocketResponse();
         fwrite($connect, $out);
-        while(!feof($connect)) {
+        while (!feof($connect)) {
             $string = fread($connect, 128);
-            if(\is_string($string)){
+            if (\is_string($string)) {
                 $response->add($string);
             }
         }

@@ -11,11 +11,11 @@ namespace Middleware;
 
 use Core\Middleware\AbstractMiddleware;
 
-class DebugMiddleware  extends AbstractMiddleware
+class DebugMiddleware extends AbstractMiddleware
 {
 
 
-    protected function before():void
+    protected function before(): void
     {
         echo "DebugMiddleware - init\r\n";
     }

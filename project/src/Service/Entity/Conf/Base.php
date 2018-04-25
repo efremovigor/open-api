@@ -24,13 +24,13 @@ class Base implements PropertyAccessInterface
 
     public function getProperties(): array
     {
-        return ['parameters','devEmail'];
+        return ['parameters', 'devEmail'];
     }
 
     /**
      * @return ExternalConf
      */
-    public function getParameters() :ExternalConf
+    public function getParameters(): ExternalConf
     {
         return $this->parameters;
     }

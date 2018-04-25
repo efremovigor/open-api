@@ -23,7 +23,7 @@ class SocketResponse
      */
     public function getHead()
     {
-        return explode("\n\r",$this->answer)[0];
+        return explode("\n\r", $this->answer)[0];
     }
 
     /**
@@ -31,6 +31,6 @@ class SocketResponse
      */
     public function getBody()
     {
-        return explode("\n\r",$this->answer)[1];
+        return explode("\n\r", $this->answer)[1];
     }
 }

@@ -136,7 +136,7 @@ class Response implements ResponseInterface
      * immutability of the message, and MUST return an instance that has the
      * new and/or updated header and value.
      *
-     * @param string          $name  Case-insensitive header field name.
+     * @param string $name Case-insensitive header field name.
      * @param string|string[] $value Header value(s).
      * @return static
      * @throws \InvalidArgumentException for invalid header names or values.
@@ -157,7 +157,7 @@ class Response implements ResponseInterface
      * immutability of the message, and MUST return an instance that has the
      * new header and/or value.
      *
-     * @param string          $name  Case-insensitive header field name to add.
+     * @param string $name Case-insensitive header field name to add.
      * @param string|string[] $value Header value(s).
      * @return static
      * @throws \InvalidArgumentException for invalid header names or values.
@@ -220,12 +220,12 @@ class Response implements ResponseInterface
      *
      * @return int Status code.
      */
-    public function getStatusCode() :int
+    public function getStatusCode(): int
     {
         return $this->statusCode;
     }
 
-    public function setStatusCode(int $code) :int
+    public function setStatusCode(int $code): int
     {
         return $this->statusCode = $code;
     }
@@ -243,7 +243,7 @@ class Response implements ResponseInterface
      *
      * @link http://tools.ietf.org/html/rfc7231#section-6
      * @link http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
-     * @param int    $code         The 3-digit integer result code to set.
+     * @param int $code The 3-digit integer result code to set.
      * @param string $reasonPhrase The reason phrase to use with the
      *                             provided status code; if none is provided, implementations MAY
      *                             use the defaults as suggested in the HTTP specification.

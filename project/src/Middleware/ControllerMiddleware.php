@@ -20,7 +20,7 @@ class ControllerMiddleware extends AbstractMiddleware
      * @return void
      */
 
-    protected function before():void
+    protected function before(): void
     {
         echo "ControllerMiddleware - init \r\n ";
     }

@@ -1,51 +1,55 @@
-routing:
-    paths:
-        index:
-            path: /
-            defaults: { controller: 'Module1:Controller1:action1' }
-            methods:  [GET]
-        index1:
-            path: /name
-            defaults: { controller: 'Module1:Controller1:action1' }
-            methods:  [GET]
-        index2:
-            path: /name/{id}
-            defaults: { controller: 'Module1:Controller1:action1' }
-            methods:  [GET,DELETE]
-            parameters:
-                id:
-                    value: \d+
-                    type: regexp
-        index3:
-            path: /users/{;id}/product/{;name}
-            defaults: { controller: 'Module1:Controller1:action1' }
-            methods:  [GET,POST]
-            parameters:
-                id:
-                    value: \d+
-                    type: regexp
-        index4:
-            path: /name/locale/{name}
-            defaults: { controller: 'Module1:Controller1:action1' }
-            methods:  [GET]
-            parameters:
-                name:
-                    value: html|rss
-                    type: choice
-        get_user_by_username:
-            path: /2.0/users/{username}/articles/{_locale}/{year}/{title}
-            defaults: {
-                controller: 'Module2:Controller2:action2',
-                _locale: en
-                }
-            parameters:
-                _locale:
-                    value: en|fr
-                    type: choice
-                _format:
-                    value: html|rss
-                    type: choice
-                year:
-                    value: \d+
-                    type: regexp
-            methods:  [GET]
+index:
+  path: /
+  controller: /Controller/Class
+  action: actionName
+  methods:  [GET]
+index1:
+  path: /name
+  controller: /Controller/Class
+  action: actionName
+  methods:  [GET]
+index2:
+  path: /name/{id}
+  controller: /Controller/Class
+  action: actionName
+  methods:  [GET,DELETE]
+  parameters:
+    - name: id
+      value: \d+
+      type: regexp
+index3:
+  path: /users/{;id}/product/{;name}
+  controller: /Controller/Class
+  action: actionName
+  methods:  [GET,POST]
+  parameters:
+    - name: id
+      value: \d+
+      type: regexp
+index4:
+  path: /name/locale/{name}
+  controller: /Controller/Class
+  action: actionName
+  methods:  [GET]
+  parameters:
+     - name:
+       value: html|rss
+       type: choice
+get_user_by_username:
+  path: /2.0/users/{username}/articles/{_locale}/{year}/{title}
+  controller: /Controller/Class
+  action: actionName
+  methods:  [GET]
+  defaults: {
+    _locale: en
+  }
+  parameters:
+    - name: _locale
+      value: en|fr
+      type: choice
+    - name: year
+      value: \d+
+      type: regexp
+    - name: _format
+      value: html|rss
+      type: choice

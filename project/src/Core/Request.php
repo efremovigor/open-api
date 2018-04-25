@@ -142,7 +142,7 @@ class Request implements ServerRequestInterface
      * immutability of the message, and MUST return an instance that has the
      * new and/or updated header and value.
      *
-     * @param string          $name  Case-insensitive header field name.
+     * @param string $name Case-insensitive header field name.
      * @param string|string[] $value Header value(s).
      * @return static
      * @throws \InvalidArgumentException for invalid header names or values.
@@ -163,7 +163,7 @@ class Request implements ServerRequestInterface
      * immutability of the message, and MUST return an instance that has the
      * new header and/or value.
      *
-     * @param string          $name  Case-insensitive header field name to add.
+     * @param string $name Case-insensitive header field name to add.
      * @param string|string[] $value Header value(s).
      * @return static
      * @throws \InvalidArgumentException for invalid header names or values.
@@ -331,8 +331,8 @@ class Request implements ServerRequestInterface
      * new UriInterface instance.
      *
      * @link http://tools.ietf.org/html/rfc3986#section-4.3
-     * @param UriInterface $uri          New request URI to use.
-     * @param bool         $preserveHost Preserve the original state of the Host header.
+     * @param UriInterface $uri New request URI to use.
+     * @param bool $preserveHost Preserve the original state of the Host header.
      * @return static
      */
     public function withUri(UriInterface $uri, $preserveHost = false)
@@ -548,8 +548,8 @@ class Request implements ServerRequestInterface
      * specifying a default value to return if the attribute is not found.
      *
      * @see getAttributes()
-     * @param string $name    The attribute name.
-     * @param mixed  $default Default value to return if the attribute does not exist.
+     * @param string $name The attribute name.
+     * @param mixed $default Default value to return if the attribute does not exist.
      * @return mixed
      */
     public function getAttribute($name, $default = null)
@@ -568,8 +568,8 @@ class Request implements ServerRequestInterface
      * updated attribute.
      *
      * @see getAttributes()
-     * @param string $name  The attribute name.
-     * @param mixed  $value The value of the attribute.
+     * @param string $name The attribute name.
+     * @param mixed $value The value of the attribute.
      * @return static
      */
     public function withAttribute($name, $value)

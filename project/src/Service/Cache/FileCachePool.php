@@ -107,18 +107,20 @@ class FileCachePool implements CacheItemPoolInterface
     public function deleteItem($key)
     {
         // TODO: Implement deleteItem() method.
-    }/**
- * Removes multiple items from the pool.
- *
- * @param string[] $keys
- *   An array of keys that should be removed from the pool.
- * @throws InvalidArgumentException
- *   If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
- *   MUST be thrown.
- *
- * @return bool
- *   True if the items were successfully removed. False if there was an error.
- */
+    }
+
+    /**
+     * Removes multiple items from the pool.
+     *
+     * @param string[] $keys
+     *   An array of keys that should be removed from the pool.
+     * @throws InvalidArgumentException
+     *   If any of the keys in $keys are not a legal value a \Psr\Cache\InvalidArgumentException
+     *   MUST be thrown.
+     *
+     * @return bool
+     *   True if the items were successfully removed. False if there was an error.
+     */
     public function deleteItems(array $keys)
     {
         // TODO: Implement deleteItems() method.

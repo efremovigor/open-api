@@ -1,4 +1,7 @@
 <?php
+
+use Core\App;
+
 /**
  * Created by PhpStorm.
  * User: igore
@@ -17,7 +20,7 @@ class RoutingManager
 	 */
 	public function __construct()
 	{
-		$file = (new YmlParser())->getYml(App::getAppDir() . '/config/routing.yml');
+		$file = (new YmlParser())->getYml(App::getConfDir() . '/routing.yml');
 		if (!isset($file['routing']['paths']) || !is_array($file['routing']['paths'])) {
 			throw new \RuntimeException('Не валидный routing list');
 		}

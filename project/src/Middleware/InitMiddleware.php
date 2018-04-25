@@ -18,10 +18,10 @@ class InitMiddleware extends AbstractMiddleware
     /**
      * @throws \Psr\Container\ContainerExceptionInterface
      */
-    protected function before():void
+    protected function before(): void
     {
         echo "InitMiddleware - init\r\n";
-        $this->initConf();
+//        $this->initConf();
         $this->container->get(ServiceConst::CACHE_MAN)->getRedis();
     }
 

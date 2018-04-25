@@ -2,6 +2,7 @@
 
 namespace Service;
 
+use Service\Entity\ContainsCollectionInterface;
 use Service\Entity\PropertyAccessInterface;
 
 
@@ -18,9 +19,9 @@ class Serializer
      * rewritable - Перезаписывать параметрами из источника
      * addable - Добавлять параметрами источника, если субьект имеет, что-то у себя
      */
-    public const ADDABLE    = 'addable';
+    public const ADDABLE = 'addable';
     public const REWRITABLE = 'rewritable';
-    public const NULLABLE   = 'nullable';
+    public const NULLABLE = 'nullable';
 
     /**
      * Десериализует данные
@@ -37,14 +38,19 @@ class Serializer
                     /**
                      * object -> object
                      */
-                    case \is_object($source) && $source instanceOf PropertyAccessInterface:
+                    case $source instanceOf PropertyAccessInterface:
                         $this->objectToObject($source, $subject, $params);
                         break;
                     /**
+                     * array -> collection object
                      * array -> object
                      */
                     case \is_array($source):
-                        $this->arrayToObject($source, $subject, $params);
+                        if ($subject instanceOf ContainsCollectionInterface) {
+                            $this->arrayToCollectionObject($source, $subject, $params);
+                        } else {
+                            $this->arrayToObject($source, $subject, $params);
+                        }
                         break;
                     /**
                      * json -> object
@@ -124,6 +130,19 @@ class Serializer
 
 
     /**
+     * Циклом нормализует данные в обьекте(кеп)
+     * @param array $source
+     * @param ContainsCollectionInterface $subject
+     * @param                             $params
+     */
+    private function arrayToCollectionObject(array $source, ContainsCollectionInterface $subject, $params): void
+    {
+        foreach ($source as $property) {
+            $subject->add($this->normalize($property, $subject->getClass(), $params));
+        }
+    }
+
+    /**
      * Переливает обьект в обьект
      * @param PropertyAccessInterface $source
      * @param mixed $subject
@@ -136,6 +155,8 @@ class Serializer
             $setMethod = $this->setMethod($property);
             $addMethod = $this->addMethod($property);
             $getMethod = $this->getMethod($property);
+
+            $subjectResource = $source->$getMethod();
             /**
              * Добавляет элементы если свойство в объекте - это массив
              */
@@ -145,8 +166,15 @@ class Serializer
                 if ($this->isAddable($params) === false && \count($source->$getMethod()) > 0) {
                     continue;
                 }
-                foreach ((array)$source->$getMethod() as $subValue) {
-                    $subject->$addMethod($subValue);
+
+                if ($subjectResource instanceof ContainsCollectionInterface) {
+                    foreach ((array)$source->$getMethod() as $subValue) {
+                        $subject->$addMethod($this->normalize($subValue, $subjectResource->getClass()));
+                    }
+                } else {
+                    foreach ((array)$source->$getMethod() as $subValue) {
+                        $subject->$addMethod($subValue);
+                    }
                 }
                 continue;
             }

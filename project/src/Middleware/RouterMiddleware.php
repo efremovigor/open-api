@@ -10,6 +10,7 @@ namespace Middleware;
 
 
 use Core\Middleware\AbstractMiddleware;
+use Service\ServiceConst;
 
 class RouterMiddleware extends AbstractMiddleware
 {
@@ -20,6 +21,7 @@ class RouterMiddleware extends AbstractMiddleware
     protected function before(): void
     {
         echo "RouterMiddleware - init\r\n";
+        $this->container->get(ServiceConst::ROUTER);
     }
 
     public function getName(): string
