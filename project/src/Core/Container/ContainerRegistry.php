@@ -6,10 +6,10 @@
  * Time: 10:38
  */
 
-namespace Core;
+namespace Core\Container;
 
-use Core\Container\ContainerItem;
-use Core\Container\ContainerItemInterface;
+
+use Core\AbstractRegistry;
 
 class ContainerRegistry extends AbstractRegistry
 {

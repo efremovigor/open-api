@@ -6,7 +6,7 @@
  * Time: 14:37
  */
 
-namespace Core\Container;
+namespace Service;
 
 use Psr\Log\LoggerInterface;
 

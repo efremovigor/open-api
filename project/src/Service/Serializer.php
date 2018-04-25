@@ -1,8 +1,8 @@
 <?php
 
-namespace Core\Container;
+namespace Service;
 
-use Core\Container\Entity\PropertyAccessInterface;
+use Service\Entity\PropertyAccessInterface;
 
 
 /**

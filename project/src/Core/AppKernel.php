@@ -8,6 +8,8 @@
 
 namespace Core;
 
+use Core\Container\ContainerRegistry;
+
 abstract class AppKernel extends Kernel
 {
 

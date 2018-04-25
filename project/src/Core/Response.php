@@ -14,6 +14,10 @@ use Psr\Http\Message\StreamInterface;
 
 class Response implements ResponseInterface
 {
+    /**
+     * @var int
+     */
+    private $statusCode = 200;
 
     /**
      * Retrieves the HTTP protocol version as a string.
@@ -216,9 +220,14 @@ class Response implements ResponseInterface
      *
      * @return int Status code.
      */
-    public function getStatusCode()
+    public function getStatusCode() :int
     {
-        // TODO: Implement getStatusCode() method.
+        return $this->statusCode;
+    }
+
+    public function setStatusCode(int $code) :int
+    {
+        return $this->statusCode = $code;
     }
 
     /**

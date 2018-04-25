@@ -6,7 +6,7 @@
  * Time: 15:50
  */
 
-namespace Core\Container\Cache;
+namespace Service\Cache;
 
 
 use Psr\Cache\CacheItemInterface;

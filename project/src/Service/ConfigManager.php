@@ -6,13 +6,13 @@
  * Time: 11:59
  */
 
-namespace Core\Container;
+namespace Service;
 
 
 use Core\App;
-use Core\Container\Entity\Conf\Base;
-use Core\Container\Entity\Conf\ExternalHostConf;
-use Core\Container\Socket\SocketRequest;
+use Service\Entity\Conf\Base;
+use Service\Entity\Conf\ExternalHostConf;
+use Service\Socket\SocketRequest;
 
 class ConfigManager
 {

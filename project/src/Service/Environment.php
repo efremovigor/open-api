@@ -6,7 +6,7 @@
  * Time: 10:59
  */
 
-namespace Core\Container;
+namespace Service;
 
 
 class Environment

@@ -9,8 +9,8 @@
 namespace Middleware;
 
 
-use Core\Container\ServiceConst;
 use Core\Middleware\AbstractMiddleware;
+use Service\ServiceConst;
 
 class InitMiddleware extends AbstractMiddleware
 {

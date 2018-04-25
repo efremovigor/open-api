@@ -37,7 +37,7 @@ abstract class AbstractMiddleware implements MiddlewareInterface
     protected $handler;
 
     /**
-     * @var ResponseInterface
+     * @var ResponseInterface|Response
      */
     protected $response;
 
@@ -79,6 +79,7 @@ abstract class AbstractMiddleware implements MiddlewareInterface
 
     private function pushResponseNext(): void
     {
+        $this->middlewareCollection->rewind();
         $nextMiddleware = $this->middlewareCollection->current();
         if ($nextMiddleware !== null) {
             $nextMiddleware->setResponse($this->response);

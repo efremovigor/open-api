@@ -6,12 +6,12 @@
  * Time: 14:46
  */
 
-namespace Core\Container;
+namespace Service;
 
 
-use Core\Container\Cache\FileCachePool;
-use Core\Container\Cache\MysqlCachePool;
-use Core\Container\Cache\RedisCachePool;
+use Service\Cache\FileCachePool;
+use Service\Cache\MysqlCachePool;
+use Service\Cache\RedisCachePool;
 use Psr\Cache\CacheItemPoolInterface;
 
 class Cache

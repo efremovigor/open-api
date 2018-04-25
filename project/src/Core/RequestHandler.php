@@ -8,11 +8,11 @@
 
 namespace Core;
 
-use Core\Container\ServiceConst;
 use Core\Middleware\MiddlewareSplQueue;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Service\ServiceConst;
 
 class RequestHandler implements RequestHandlerInterface
 {

@@ -6,7 +6,7 @@
  * Time: 8:52
  */
 
-namespace Core\Container\Socket;
+namespace Service\Socket;
 
 
 class SocketRequest

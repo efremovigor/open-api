@@ -2,16 +2,17 @@
 
 namespace Core;
 
-use Core\Container\Cache;
-use Core\Container\ConfigManager;
 use Core\Container\ContainerItem;
-use Core\Container\Environment;
-use Core\Container\Logger;
-use Core\Container\Serializer;
-use Core\Container\ServiceConst;
-use Core\Container\Socket;
-use Core\Container\YmlParser;
+use Core\Container\ContainerRegistry;
 use Core\Middleware\MiddlewareSplQueue;
+use Service\Cache;
+use Service\ConfigManager;
+use Service\Environment;
+use Service\Logger;
+use Service\Serializer;
+use Service\ServiceConst;
+use Service\Socket;
+use Service\YmlParser;
 
 class App extends AppKernel
 {

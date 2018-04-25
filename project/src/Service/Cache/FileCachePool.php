@@ -3,17 +3,17 @@
  * Created by PhpStorm.
  * User: igore
  * Date: 19.04.18
- * Time: 15:40
+ * Time: 15:50
  */
 
-namespace Core\Container\Cache;
+namespace Service\Cache;
 
 
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 
-class RedisCachePool implements CacheItemPoolInterface
+class FileCachePool implements CacheItemPoolInterface
 {
 
     /**

@@ -6,7 +6,7 @@
  * Time: 14:46
  */
 
-namespace Core\Container;
+namespace Service;
 
 final class ServiceConst
 {

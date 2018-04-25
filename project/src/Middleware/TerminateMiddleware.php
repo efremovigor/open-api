@@ -21,7 +21,6 @@ class TerminateMiddleware extends AbstractMiddleware
     protected function before(): void
     {
         echo "TerminateMiddleware - init\r\n";
-        $this->response = new Response();
     }
 
     public function getName(): string

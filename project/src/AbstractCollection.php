@@ -1,7 +1,7 @@
 <?php
 
 
-abstract class CollectionAbstract implements Iterator
+abstract class AbstractCollection implements Iterator
 {
 
 	/**

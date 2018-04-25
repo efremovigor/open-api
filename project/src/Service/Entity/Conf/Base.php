@@ -6,10 +6,10 @@
  * Time: 13:52
  */
 
-namespace Core\Container\Entity\Conf;
+namespace Service\Entity\Conf;
 
 
-use Core\Container\Entity\PropertyAccessInterface;
+use Service\Entity\PropertyAccessInterface;
 
 class Base implements PropertyAccessInterface
 {
