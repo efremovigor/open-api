@@ -168,11 +168,11 @@ class Serializer
                 }
 
                 if ($subjectResource instanceof ContainsCollectionInterface) {
-                    foreach ((array)$source->$getMethod() as $subValue) {
+                    foreach ((array) $source->$getMethod() as $subValue) {
                         $subject->$addMethod($this->normalize($subValue, $subjectResource->getClass()));
                     }
                 } else {
-                    foreach ((array)$source->$getMethod() as $subValue) {
+                    foreach ((array) $source->$getMethod() as $subValue) {
                         $subject->$addMethod($subValue);
                     }
                 }

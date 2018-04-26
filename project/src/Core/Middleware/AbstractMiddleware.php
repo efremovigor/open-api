@@ -53,7 +53,7 @@ abstract class AbstractMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @param ServerRequestInterface  $request
+     * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $handler
      * @return ResponseInterface
      */
@@ -68,7 +68,9 @@ abstract class AbstractMiddleware implements MiddlewareInterface
         try {
             $this->before();
             $this->pushResponseNext();
-            $this->response = $handler->handle($request);
+            if(!$this->middlewareCollection->isEmpty()){
+                $this->response = $handler->handle($request);
+            }
             $this->after();
         } catch (\Exception $exception) {
             $exception->getMessage();

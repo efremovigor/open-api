@@ -49,11 +49,7 @@ class RequestHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $middleware = $this->middlewares->shift();
-        if ($middleware !== null) {
-            $this->response = $middleware->process($this->request, $this);
-        }
-        return $this->response;
+        return $this->middlewares->shift()->process($this->request, $this);
     }
 
     public function process(): void
