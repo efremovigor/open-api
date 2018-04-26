@@ -137,8 +137,8 @@ class Serializer
      */
     private function arrayToCollectionObject(array $source, ContainsCollectionInterface $subject, $params): void
     {
-        foreach ($source as $property) {
-            $subject->add($this->normalize($property, $subject->getClass(), $params));
+        foreach ($source as $key => $property) {
+            $subject->set($key, $this->normalize($property, $subject->getClass(), $params));
         }
     }
 
@@ -156,7 +156,6 @@ class Serializer
             $addMethod = $this->addMethod($property);
             $getMethod = $this->getMethod($property);
 
-            $subjectResource = $source->$getMethod();
             /**
              * Добавляет элементы если свойство в объекте - это массив
              */
@@ -167,14 +166,8 @@ class Serializer
                     continue;
                 }
 
-                if ($subjectResource instanceof ContainsCollectionInterface) {
-                    foreach ((array) $source->$getMethod() as $subValue) {
-                        $subject->$addMethod($this->normalize($subValue, $subjectResource->getClass()));
-                    }
-                } else {
-                    foreach ((array) $source->$getMethod() as $subValue) {
-                        $subject->$addMethod($subValue);
-                    }
+                foreach ((array) $source->$getMethod() as $subValue) {
+                    $subject->$addMethod($subValue);
                 }
                 continue;
             }
@@ -216,6 +209,17 @@ class Serializer
             $setMethod = $this->setMethod($key);
             $addMethod = $this->addMethod($key);
             $getMethod = $this->getMethod($key);
+
+            /**
+             * Если элемент сорса массив , а элемент того уровня коллекция - упаковываем в коллекцию
+             */
+            if (\is_array($value) && method_exists($subject, $getMethod) && $subject->$getMethod() instanceof ContainsCollectionInterface) {
+                foreach ((array) $value as $subKey => $subValue) {
+                    $subject->$getMethod()->set($subKey, $this->normalize($subValue, $subject->$getMethod()->getClass()));
+                }
+                continue;
+            }
+
             /**
              */
             if (\is_array($value) && method_exists($subject, $addMethod)) {

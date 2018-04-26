@@ -13,5 +13,5 @@ interface ContainsCollectionInterface
 {
     public function getClass(): string;
 
-    public function add($element): void;
+    public function set($key, $element): void;
 }

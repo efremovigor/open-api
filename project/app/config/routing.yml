@@ -14,7 +14,7 @@ index2:
   action: actionName
   methods:  [GET,DELETE]
   parameters:
-    - name: id
+    id:
       value: \d+
       type: regexp
 index3:
@@ -23,7 +23,7 @@ index3:
   action: actionName
   methods:  [GET,POST]
   parameters:
-    - name: id
+    id:
       value: \d+
       type: regexp
 index4:
@@ -32,9 +32,9 @@ index4:
   action: actionName
   methods:  [GET]
   parameters:
-     - name:
-       value: html|rss
-       type: choice
+    name:
+      value: html|rss
+      type: choice
 get_user_by_username:
   path: /2.0/users/{username}/articles/{_locale}/{year}/{title}
   controller: /Controller/Class
@@ -44,12 +44,12 @@ get_user_by_username:
     _locale: en
   }
   parameters:
-    - name: _locale
+    _locale:
       value: en|fr
       type: choice
-    - name: year
+    year:
       value: \d+
       type: regexp
-    - name: _format
+    _format:
       value: html|rss
       type: choice

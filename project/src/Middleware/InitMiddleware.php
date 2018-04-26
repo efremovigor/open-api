@@ -21,7 +21,7 @@ class InitMiddleware extends AbstractMiddleware
     protected function before(): void
     {
         echo "InitMiddleware - init\r\n";
-//        $this->initConf();
+        $this->initConf();
         $this->container->get(ServiceConst::CACHE_MAN)->getRedis();
     }
 

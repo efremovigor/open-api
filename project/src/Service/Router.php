@@ -2,11 +2,9 @@
 
 namespace Service;
 
-use RouterValidator;
-use RoutingManager;
-use RoutingPath;
+use Service\Entity\Routing\Path;
 use Service\Entity\Routing\RoutingCollection;
-use UrlAnalyzer;
+use Service\Router\UrlAnalyzer;
 
 /**
  * Created by PhpStorm.
@@ -18,47 +16,46 @@ class Router
 {
 
     /**
-     * @var UrlAnalyzer
-     */
-    private $routeAnalyzer;
-
-    /**
      * @var RoutingCollection
      */
     private $routingCollection;
 
     /**
+     * @var string
+     */
+    private $requestUri;
+
+    /**
+     * @var Path|null
+     */
+    private $selectPath;
+
+    /**
      * Router constructor.
      * @param YmlParser $parser
+     * @throws \Exception
      */
     public function __construct(YmlParser $parser)
     {
+        $this->requestUri = $_SERVER['REQUEST_URI'];
         $this->routingCollection = $parser->packPath(\Core\App::getConfDir() . '/routing.yml', RoutingCollection::class);
-        $this->routeAnalyzer = new UrlAnalyzer($_SERVER['REQUEST_URI']);
-        $this->routeAnalyzer->processing();
-//		var_dump($this->getPathRoute());
     }
 
     /**
-     * @return \UrlAnalyzer
+     * @return null|Path
+     * @throws \Exception
      */
-    public function getRouteAnalyzer(): UrlAnalyzer
+    public function getPath(): ?Path
     {
-        return $this->routeAnalyzer;
-    }
-
-    /**
-     * @return null|RoutingPath
-     */
-    public function getPathRoute(): ?RoutingPath
-    {
-        $validator = new RouterValidator();
-        foreach ($this->routingCollection->getAll() as $item) {
-            $valid = $validator->checkRoute($this->routeAnalyzer, $item->getPathAnalyzer());
-            if ($valid === true) {
-                return $item;
+        if ($this->selectPath === null) {
+            $analyzer = new UrlAnalyzer();
+            foreach ($this->routingCollection->getAll() as $path) {
+                if (preg_match($analyzer->getMatch($path), $this->requestUri)) {
+                    $this->selectPath = $path;
+                    break;
+                }
             }
         }
-        return null;
+        return $this->selectPath;
     }
 }

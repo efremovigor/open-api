@@ -36,6 +36,11 @@ abstract class AbstractCollection implements Iterator
         $this->elements[$key] = $element;
     }
 
+    public function has($key): bool
+    {
+        return isset($this->elements[$key]);
+    }
+
     /**
      * @param $key
      *

@@ -21,6 +21,7 @@ abstract class AbstractMiddleware implements MiddlewareInterface
      * @var MiddlewareSplQueue
      */
     protected $middlewareCollection;
+
     /**
      * @var ContainerInterface
      */
@@ -68,8 +69,8 @@ abstract class AbstractMiddleware implements MiddlewareInterface
         try {
             $this->before();
             $this->pushResponseNext();
-            if(!$this->middlewareCollection->isEmpty()){
-                $this->response = $handler->handle($request);
+            if (!$this->middlewareCollection->isEmpty()) {
+                $this->response = $handler->handle($this->request);
             }
             $this->after();
         } catch (\Exception $exception) {

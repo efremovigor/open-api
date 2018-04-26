@@ -21,7 +21,7 @@ class RouterMiddleware extends AbstractMiddleware
     protected function before(): void
     {
         echo "RouterMiddleware - init\r\n";
-        $this->container->get(ServiceConst::ROUTER);
+        var_dump($this->container->get(ServiceConst::ROUTER)->getPath());
     }
 
     public function getName(): string
