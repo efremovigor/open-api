@@ -9,11 +9,18 @@
 namespace Service;
 
 
+use Conf\Dev;
+use Conf\EnvConfInterface;
+use Conf\Prod;
+use Conf\Test;
+
 class Environment
 {
     private $env;
 
-    private const DEV = ['dev', 'test'];
+    private const DEV = 'dev';
+    private const PROD = 'prod';
+    private const TEST = 'test';
 
     public function set(string $env): void
     {
@@ -25,7 +32,7 @@ class Environment
      */
     public function isDev(): bool
     {
-        return \in_array($this->env, self::DEV, true);
+        return \in_array($this->env, [static::DEV, static::TEST], true);
     }
 
     public function getLogLevel(): array
@@ -50,8 +57,24 @@ class Environment
         $this->set($_SERVER['ENV']);
     }
 
-    public function get(): string
+    public function getMode(): string
     {
         return $this->env;
+    }
+
+    /**
+     * @return EnvConfInterface
+     */
+    public function getConf(): EnvConfInterface
+    {
+        switch ($this->env) {
+            case static::DEV:
+                return new Dev();
+            case static::TEST:
+                return new Test();
+            case static::PROD:
+                return new Prod();
+        }
+        throw new \RuntimeException('Invalid environment');
     }
 }

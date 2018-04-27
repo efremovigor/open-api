@@ -10,7 +10,8 @@ namespace Service;
 
 
 use Core\App;
-use Service\Entity\Conf\Base;
+use Service\Entity\Conf\Conf;
+use Service\Entity\Conf\EnvConf;
 use Service\Entity\Conf\ExternalHostConf;
 use Service\Socket\SocketRequest;
 
@@ -33,9 +34,24 @@ class ConfigManager
     private $ymlParser;
 
     /**
-     * @var Base
+     * @var Conf
      */
     private $conf;
+
+    /**
+     * Вид работы сервиса, когда он тянет конфиг из предопределенных классов
+     */
+    private const SELF_MODE = 'self';
+
+    /**
+     * Вид работы сервиса, когда пытается подтянуть конфиг на основе данных откуда их брать
+     */
+    private const EXTERNAL_MODE = 'external';
+
+    /**
+     * Вид работы(выставляется ручками)
+     */
+    private const MODE = self::SELF_MODE;
 
     /**
      * @param Environment $environment
@@ -48,11 +64,13 @@ class ConfigManager
         $this->env = $environment;
         $this->socket = $socket;
         $this->ymlParser = $ymlParser;
-        $this->initConf();
+        $this->conf = new Entity\Conf\Conf();
+
+        $this->init();
     }
 
 
-    public function get(): Base
+    public function get(): Conf
     {
         return $this->conf;
     }
@@ -61,12 +79,20 @@ class ConfigManager
     /**
      * @throws \Exception
      */
-    private function initConf(): void
+    private function init(): void
     {
-        if (!\file_exists($this->getParametersPath())) {
-            $this->createFileParameters();
+        switch (self::MODE) {
+            case self::EXTERNAL_MODE:
+                if (!\file_exists($this->getParametersPath())) {
+                    $this->createFileParameters();
+                }
+                $this->conf->setEnvConf($this->ymlParser->packPath($this->getConfPath(), EnvConf::class));
+                break;
+            case self::SELF_MODE:
+                $this->conf->setEnvConf($this->env->getConf());
+                break;
         }
-        $this->conf = $this->ymlParser->packPath($this->getConfPath(), Base::class);
+
     }
 
     private function getParametersPath(): string
@@ -87,7 +113,7 @@ class ConfigManager
         /**
          * @var $conf ExternalHostConf
          */
-        $conf = $this->ymlParser->packPath(App::getConfDir() . '/' . $this->env->get() . '/conf.yml', ExternalHostConf::class);
+        $conf = $this->ymlParser->packPath(App::getConfDir() . '/' . $this->env->getMode() . '/conf.yml', ExternalHostConf::class);
         $request = new SocketRequest($conf->getServer(), $conf->getUrl());
         $request->setTimeout(2);
         $parameters = $this->socket->call($request);

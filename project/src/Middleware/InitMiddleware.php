@@ -37,7 +37,7 @@ class InitMiddleware extends AbstractMiddleware
     private function initConf(): void
     {
 
-        $this->container->get(ServiceConst::CONF_MANAGER)->get();
+        var_dump($this->container->get(ServiceConst::CONF_MANAGER)->get());
     }
 
 }
