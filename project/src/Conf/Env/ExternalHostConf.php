@@ -6,9 +6,9 @@
  * Time: 14:26
  */
 
-namespace Service\Entity\Conf;
+namespace Conf\Env;
 
-use Service\Entity\PropertyAccessInterface;
+use Core\Service\Entity\PropertyAccessInterface;
 
 class ExternalHostConf implements PropertyAccessInterface
 {

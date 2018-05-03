@@ -9,14 +9,12 @@
 namespace Core;
 
 use Core\Container\ContainerRegistry;
+use Core\Service\CoreServiceConst;
+use Core\Service\RequestHandler;
 
 abstract class AppKernel extends Kernel
 {
 
-    /**
-     * @var RequestHandler
-     */
-    private $requestHandler;
 
     /**
      * @var ContainerRegistry
@@ -28,36 +26,20 @@ abstract class AppKernel extends Kernel
      */
     public function __construct()
     {
-        $this->init();
+        $this->container = new ContainerRegistry();
     }
 
     public function run(): void
     {
-        $this->requestHandler->process();
+        $this->getRequestHandler()->process();
     }
 
-    private function init(): void
+    /**
+     * @return RequestHandler
+     */
+    public function getRequestHandler(): RequestHandler
     {
-        $this->container = new ContainerRegistry($this->getServices());
-        $this->requestHandler = new RequestHandler($this);
+        return $this->container->get(CoreServiceConst::REQUEST_HANDLER);
     }
-
-    /**
-     * @return ContainerRegistry
-     */
-    public function getContainer(): ContainerRegistry
-    {
-        return $this->container;
-    }
-
-    /**
-     * @return array
-     */
-    abstract public function getMiddlewares(): array;
-
-    /**
-     * @return array
-     */
-    abstract public function getServices(): array;
 
 }

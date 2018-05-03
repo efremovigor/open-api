@@ -9,7 +9,8 @@
 namespace Service\Entity\Routing;
 
 
-use Service\Entity\PropertyAccessInterface;
+
+use Core\Service\Entity\PropertyAccessInterface;
 
 class Parameter implements PropertyAccessInterface
 {

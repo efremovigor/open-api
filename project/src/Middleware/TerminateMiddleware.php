@@ -9,8 +9,7 @@
 namespace Middleware;
 
 
-use Core\Middleware\AbstractMiddleware;
-use Core\Response;
+use Core\Service\Middleware\AbstractMiddleware;
 
 class TerminateMiddleware extends AbstractMiddleware
 {

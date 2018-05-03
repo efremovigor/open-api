@@ -3,13 +3,13 @@
  * Created by PhpStorm.
  * User: igore
  * Date: 26.04.18
- * Time: 16:00
+ * Time: 15:59
  */
 
-namespace Conf;
+namespace Conf\Env;
 
 
-class Test implements EnvConfInterface
+class Prod implements EnvConfInterface
 {
 
     public function getHostBalancer(): string
@@ -72,9 +72,8 @@ class Test implements EnvConfInterface
         // TODO: Implement getPortElasticSearch() method.
     }
 
-
     public function isProfiling(): bool
     {
-        return true;
+        return false;
     }
 }

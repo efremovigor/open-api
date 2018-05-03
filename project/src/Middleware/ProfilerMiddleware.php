@@ -9,8 +9,8 @@
 namespace Middleware;
 
 
-use Core\Middleware\AbstractMiddleware;
-use Service\ConfigManager;
+use Core\Service\ConfigManager;
+use Core\Service\Middleware\AbstractMiddleware;
 use Service\Profiler\ProfilerInterface;
 use Service\ServiceConst;
 

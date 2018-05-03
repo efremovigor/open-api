@@ -6,7 +6,7 @@
  * Time: 14:48
  */
 
-namespace Service\Entity;
+namespace Core\Service\Entity;
 
 
 interface ContainsCollectionInterface

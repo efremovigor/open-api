@@ -6,10 +6,11 @@
  * Time: 11:00
  */
 
-namespace Core\Middleware;
+namespace Core\Service\Middleware;
 
 
 use Core\Response;
+use Core\Service\MiddlewareSplQueue;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;

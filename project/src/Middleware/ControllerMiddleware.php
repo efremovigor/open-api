@@ -8,8 +8,7 @@
 
 namespace Middleware;
 
-
-use Core\Middleware\AbstractMiddleware;
+use Core\Service\Middleware\AbstractMiddleware;
 
 class ControllerMiddleware extends AbstractMiddleware
 {

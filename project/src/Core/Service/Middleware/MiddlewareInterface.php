@@ -6,7 +6,7 @@
  * Time: 15:56
  */
 
-namespace Core\Middleware;
+namespace Core\Service\Middleware;
 
 
 use Psr\Http\Message\ResponseInterface;

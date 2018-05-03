@@ -6,13 +6,13 @@
  * Time: 13:14
  */
 
-namespace Core;
+namespace Core\Service;
 
-use Core\Middleware\MiddlewareSplQueue;
+use Core\Request;
+use Core\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Service\ServiceConst;
 
 class RequestHandler implements RequestHandlerInterface
 {
@@ -31,15 +31,14 @@ class RequestHandler implements RequestHandlerInterface
      */
     private $response;
 
-    public function __construct(AppKernel $app)
+    /**
+     * RequestHandler constructor.
+     * @param MiddlewareSplQueue $middlewareSplQueue
+     */
+    public function __construct(MiddlewareSplQueue $middlewareSplQueue)
     {
         $this->request = new Request();
-
-        /**
-         * @var MiddlewareSplQueue
-         */
-        $this->middlewares = $app->getContainer()->get(ServiceConst::MIDDLEWARES);
-        $this->middlewares->pushList($app->getMiddlewares());
+        $this->middlewares = $middlewareSplQueue;
     }
 
     /**

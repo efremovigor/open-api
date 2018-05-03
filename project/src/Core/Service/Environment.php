@@ -6,13 +6,13 @@
  * Time: 10:59
  */
 
-namespace Service;
+namespace Core\Service;
 
 
-use Conf\Dev;
-use Conf\EnvConfInterface;
-use Conf\Prod;
-use Conf\Test;
+use Conf\Env\Dev;
+use Conf\Env\EnvConfInterface;
+use Conf\Env\Prod;
+use Conf\Env\Test;
 use Psr\Log\LogLevel;
 
 class Environment

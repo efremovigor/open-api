@@ -6,7 +6,7 @@
  * Time: 16:00
  */
 
-namespace Conf;
+namespace Conf\Env;
 
 
 interface EnvConfInterface

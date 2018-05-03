@@ -8,7 +8,7 @@
 
 namespace Service\Entity\Routing;
 
-use Service\Entity\PropertyAccessInterface;
+use Core\Service\Entity\PropertyAccessInterface;
 
 class Path implements PropertyAccessInterface
 {

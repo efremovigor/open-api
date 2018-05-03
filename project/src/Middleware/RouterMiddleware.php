@@ -9,7 +9,7 @@
 namespace Middleware;
 
 
-use Core\Middleware\AbstractMiddleware;
+use Core\Service\Middleware\AbstractMiddleware;
 use Service\ServiceConst;
 
 class RouterMiddleware extends AbstractMiddleware

@@ -1,9 +1,9 @@
 <?php
 
-namespace Service;
+namespace Core\Service;
 
-use Service\Entity\ContainsCollectionInterface;
-use Service\Entity\PropertyAccessInterface;
+use Core\Service\Entity\ContainsCollectionInterface;
+use Core\Service\Entity\PropertyAccessInterface;
 
 
 /**

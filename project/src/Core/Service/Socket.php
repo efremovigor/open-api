@@ -6,11 +6,11 @@
  * Time: 8:50
  */
 
-namespace Service;
+namespace Core\Service;
 
 
-use Service\Socket\SocketRequest;
-use Service\Socket\SocketResponse;
+use Core\Service\Socket\SocketRequest;
+use Core\Service\Socket\SocketResponse;
 
 class Socket
 {

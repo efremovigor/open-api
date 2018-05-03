@@ -6,11 +6,12 @@
  * Time: 14:26
  */
 
-namespace Service\Entity\Conf;
+namespace Conf;
 
 
-use Conf\EnvConfInterface;
-use Service\Entity\PropertyAccessInterface;
+
+use Conf\Env\EnvConfInterface;
+use Core\Service\Entity\PropertyAccessInterface;
 
 class EnvConf implements PropertyAccessInterface , EnvConfInterface
 {

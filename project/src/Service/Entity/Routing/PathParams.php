@@ -10,7 +10,7 @@ namespace Service\Entity\Routing;
 
 
 use Core\AbstractCollection;
-use Service\Entity\ContainsCollectionInterface;
+use Core\Service\Entity\ContainsCollectionInterface;
 
 class PathParams extends AbstractCollection implements ContainsCollectionInterface
 {

@@ -2,6 +2,7 @@
 
 namespace Service;
 
+use Core\Service\YmlParser;
 use Service\Entity\Routing\Path;
 use Service\Entity\Routing\RoutingCollection;
 use Service\Router\UrlAnalyzer;

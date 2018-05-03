@@ -6,14 +6,14 @@
  * Time: 11:59
  */
 
-namespace Service;
+namespace Core\Service;
 
 
+use Conf\Components;
+use Conf\Env\ExternalHostConf;
+use Conf\EnvConf;
 use Core\App;
-use Service\Entity\Conf\Conf;
-use Service\Entity\Conf\EnvConf;
-use Service\Entity\Conf\ExternalHostConf;
-use Service\Socket\SocketRequest;
+use Core\Service\Socket\SocketRequest;
 
 class ConfigManager
 {
@@ -34,7 +34,7 @@ class ConfigManager
     private $ymlParser;
 
     /**
-     * @var Conf
+     * @var  \Conf\Conf
      */
     private $conf;
 
@@ -64,13 +64,13 @@ class ConfigManager
         $this->env = $environment;
         $this->socket = $socket;
         $this->ymlParser = $ymlParser;
-        $this->conf = new Entity\Conf\Conf();
+        $this->conf = new \Conf\Conf();
 
         $this->init();
     }
 
 
-    public function get(): Conf
+    public function get():  \Conf\Conf
     {
         return $this->conf;
     }
@@ -92,6 +92,7 @@ class ConfigManager
                 $this->conf->setEnvConf($this->env->getConf());
                 break;
         }
+        $this->conf->setComponents(new Components());
 
     }
 

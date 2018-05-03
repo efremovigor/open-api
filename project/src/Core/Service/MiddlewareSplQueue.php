@@ -6,7 +6,7 @@
  * Time: 8:45
  */
 
-namespace Core\Middleware;
+namespace Core\Service;
 
 
 use Psr\Container\ContainerInterface;
@@ -22,16 +22,18 @@ class MiddlewareSplQueue extends \SplQueue
     /**
      * MiddlewareCollection constructor.
      * @param ContainerInterface $container
+     * @param ConfigManager $configManager
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container,ConfigManager $configManager)
     {
         $this->container = $container;
+        $this->pushList($configManager->get()->getComponents()->getMiddlewares());
     }
 
     /**
      * @param array $middlewares
      */
-    public function pushList(array $middlewares): void
+    private function pushList(array $middlewares): void
     {
         foreach ($middlewares as $name) {
             $this->push($this->createMiddleware($name));
@@ -81,12 +83,12 @@ class MiddlewareSplQueue extends \SplQueue
         $this->add($this->getNumber($key) + 1, $this->createMiddleware($middleware));
     }
 
-    private function createMiddleware(string $name): \Core\Middleware\MiddlewareInterface
+    private function createMiddleware(string $name): MiddlewareInterface
     {
         return new $name($this, $this->container);
     }
 
-    public function current(): ?\Core\Middleware\MiddlewareInterface
+    public function current(): ?MiddlewareInterface
     {
         return parent::current();
     }

@@ -3,7 +3,7 @@
 namespace Service\Entity\Routing;
 
 use Core\AbstractCollection;
-use Service\Entity\ContainsCollectionInterface;
+use Core\Service\Entity\ContainsCollectionInterface;
 
 /**
  * Created by PhpStorm.

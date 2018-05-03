@@ -6,7 +6,7 @@
  * Time: 15:59
  */
 
-namespace Conf;
+namespace Conf\Env;
 
 
 class Dev implements EnvConfInterface
