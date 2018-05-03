@@ -10,3 +10,4 @@ hostExchange: prod
 hostSberbank: prod
 hostElasticSearch: prod
 portElasticSearch: prod
+isProfiling: false

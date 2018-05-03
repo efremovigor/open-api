@@ -27,6 +27,7 @@ class EnvConf implements PropertyAccessInterface , EnvConfInterface
     private $hostSberbank;
     private $hostElasticSearch;
     private $portElasticSearch;
+    private $isProfiling;
 
 
     public function getProperties(): array
@@ -44,6 +45,7 @@ class EnvConf implements PropertyAccessInterface , EnvConfInterface
             'hostSberbank',
             'hostElasticSearch',
             'portElasticSearch',
+            'isProfiling',
        ];
     }
 
@@ -240,4 +242,24 @@ class EnvConf implements PropertyAccessInterface , EnvConfInterface
     }
 
 
+    public function isProfiling(): bool
+    {
+        // TODO: Implement isProfiling() method.
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsProfiling()
+    {
+        return $this->isProfiling;
+    }
+
+    /**
+     * @param mixed $isProfiling
+     */
+    public function setIsProfiling($isProfiling): void
+    {
+        $this->isProfiling = $isProfiling;
+    }
 }

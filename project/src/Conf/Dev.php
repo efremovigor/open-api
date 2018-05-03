@@ -71,4 +71,9 @@ class Dev implements EnvConfInterface
     {
         // TODO: Implement getPortElasticSearch() method.
     }
+
+    public function isProfiling(): bool
+    {
+        return true;
+    }
 }

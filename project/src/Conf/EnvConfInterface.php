@@ -35,4 +35,6 @@ interface EnvConfInterface
 
     public function getPortElasticSearch(): string;
 
+    public function isProfiling(): bool;
+
 }

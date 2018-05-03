@@ -19,7 +19,7 @@ class Conf
     /**
      * @return EnvConf
      */
-    public function getEnvConf(): EnvConf
+    public function getEnvConf(): EnvConfInterface
     {
         return $this->envConf;
     }

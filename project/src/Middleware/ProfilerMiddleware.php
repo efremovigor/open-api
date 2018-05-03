@@ -10,6 +10,7 @@ namespace Middleware;
 
 
 use Core\Middleware\AbstractMiddleware;
+use Service\ConfigManager;
 use Service\Profiler\ProfilerInterface;
 use Service\ServiceConst;
 
@@ -22,12 +23,20 @@ class ProfilerMiddleware extends AbstractMiddleware
     protected function before(): void
     {
         echo "ProfilerMiddleware - init\r\n";
-        $this->getProfiler()->start();
+        if($this->getConf()->get()->getEnvConf()->isProfiling()){
+            $this->getProfiler()->start();
+        }
     }
 
+    /**
+     * @throws \Psr\Container\ContainerExceptionInterface
+     */
     protected function after(): void
     {
-        $this->getProfiler()->end();
+        if($this->getConf()->get()->getEnvConf()->isProfiling()){
+            $this->getProfiler()->end();
+            var_dump($this->getProfiler()->info());
+        }
     }
 
     public function getName(): string
@@ -37,10 +46,19 @@ class ProfilerMiddleware extends AbstractMiddleware
 
     /**
      * @return ProfilerInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
      */
     public function getProfiler(): ProfilerInterface
     {
         return $this->container->get(ServiceConst::PROFILER);
+    }
 
+    /**
+     * @return ConfigManager
+     * @throws \Psr\Container\ContainerExceptionInterface
+     */
+    public function getConf(): ConfigManager
+    {
+        return $this->container->get(ServiceConst::CONF_MANAGER);
     }
 }

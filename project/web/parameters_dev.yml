@@ -10,3 +10,4 @@ hostExchange: dev
 hostSberbank: dev
 hostElasticSearch: dev
 portElasticSearch: dev
+isProfiling: true
