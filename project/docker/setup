@@ -30,7 +30,7 @@ class SetupAction
             $this->processXdebug();
         }
         else {
-            @unlink("{$this->currentDir}/config/php7.1/mods-available/xdebug.ini");
+            @unlink("{$this->currentDir}/config/php7.2/mods-available/xdebug.ini");
         }
 
         echo "Environment setup completed!".PHP_EOL;
@@ -58,7 +58,7 @@ class SetupAction
     private function processXdebug()
     {
         $pathFrom = "{$this->currentDir}/xdebug.ini.example";
-        $pathTo   = "{$this->currentDir}/config/php7.1/mods-available/xdebug.ini";
+        $pathTo   = "{$this->currentDir}/config/php7.2/mods-available/xdebug.ini";
 
         $content  = file_get_contents($pathFrom);
 

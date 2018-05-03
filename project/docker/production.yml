@@ -6,10 +6,10 @@ project.ru:
     - "./config/nginx/conf.d:/etc/nginx/conf.d"
     - "./config/nginx/sites-enabled:/etc/nginx/sites-enabled"
   # PHP configuration
-    - "./config/php7.1/cli/php.ini:/etc/php/7.1/cli/php.ini"
-    - "./config/php7.1/fpm/php.ini:/etc/php/7.1/fpm/php.ini"
-    - "./config/php7.1/fpm/php-fpm.conf:/etc/php/7.1/fpm/php-fpm.conf"
-    - "./config/php7.1/fpm/pool.d:/etc/php/7.1/fpm/pool.d"
+    - "./config/php7.2/cli/php.ini:/etc/php/7.2/cli/php.ini"
+    - "./config/php7.2/fpm/php.ini:/etc/php/7.2/fpm/php.ini"
+    - "./config/php7.2/fpm/php-fpm.conf:/etc/php/7.2/fpm/php-fpm.conf"
+    - "./config/php7.2/fpm/pool.d:/etc/php/7.2/fpm/pool.d"
   # SSH & composer configuration
     - "./runtime/.ssh:/var/www/.ssh"
     - "./runtime/.composer:/home/project.ru/.composer"

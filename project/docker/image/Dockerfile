@@ -11,6 +11,7 @@ ENV LC_ALL en_US.UTF-8
 
 # Install s6-overlay
 ADD https://github.com/just-containers/s6-overlay/releases/download/v1.18.1.5/s6-overlay-amd64.tar.gz /tmp/
+
 RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C /
 
 # Upgrading image and base tools
@@ -31,19 +32,24 @@ RUN \
 RUN \
     apt-get install -y git redis-tools mysql-client;
 
-# installing php 7.1
+# installing php 7.2
 RUN \
     add-apt-repository -y ppa:ondrej/php && \
     apt-get update -y --fix-missing;
 RUN \
-    apt-get install -y php7.2 php7.2-cli php7.2-common php7.1-curl php7.1-fpm php7.1-gd php7.1-imap && \
-    apt-get install -y php7.2-json php7.1-mbstring php7.1-mcrypt php7.1-mysql php7.2-opcache php7.1-soap && \
-    apt-get install -y php7.1-sqlite3 php7.1-xml php7.1-xmlrpc php7.1-xsl php7.1-zip php7.1-intl php-yaml phpunit;
+    apt-get install -y php7.2 php7.2-dev php7.2-cli php7.2-common php7.2-curl php7.2-fpm php7.2-gd php7.2-imap && \
+    apt-get install -y php7.2-json php7.2-mbstring php-mcrypt php7.2-mysql php7.2-opcache php7.2-soap && \
+    apt-get install -y php7.2-sqlite3 php7.2-xml php7.2-xmlrpc php7.2-xsl php7.2-zip php7.2-intl php-yaml phpunit;
+
+RUN git clone https://github.com/longxinH/xhprof /tmp/xhprof
+
+RUN \
+    cd /tmp/xhprof/extension && phpize && ./configure --with-php-config=/usr/bin/php-config && make && make install;
 
 # create unix socket for php-fpm
 RUN \
     mkdir -p /run/php && \
-    touch /run/php/php7.1-fpm.sock;
+    touch /run/php/php7.2-fpm.sock;
 
 # installing servers
 RUN \

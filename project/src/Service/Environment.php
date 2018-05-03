@@ -13,6 +13,7 @@ use Conf\Dev;
 use Conf\EnvConfInterface;
 use Conf\Prod;
 use Conf\Test;
+use Psr\Log\LogLevel;
 
 class Environment
 {
@@ -21,6 +22,36 @@ class Environment
     private const DEV = 'dev';
     private const PROD = 'prod';
     private const TEST = 'test';
+
+    private const LOG_LEVELS = [
+        self::DEV => [
+            LogLevel::EMERGENCY,
+            LogLevel::ALERT,
+            LogLevel::CRITICAL,
+            LogLevel::ERROR,
+            LogLevel::WARNING,
+            LogLevel::NOTICE,
+            LogLevel::INFO,
+            LogLevel::DEBUG,
+        ],
+        self::PROD => [
+            LogLevel::EMERGENCY,
+            LogLevel::ALERT,
+            LogLevel::CRITICAL,
+            LogLevel::ERROR,
+            LogLevel::WARNING,
+        ],
+        self::TEST => [
+            LogLevel::EMERGENCY,
+            LogLevel::ALERT,
+            LogLevel::CRITICAL,
+            LogLevel::ERROR,
+            LogLevel::WARNING,
+            LogLevel::NOTICE,
+            LogLevel::INFO,
+            LogLevel::DEBUG,
+        ]
+    ];
 
     public function set(string $env): void
     {
@@ -37,16 +68,7 @@ class Environment
 
     public function getLogLevel(): array
     {
-        return [
-            'emergency',
-            'alert',
-            'critical',
-            'error',
-            'warning',
-            'notice',
-            'info',
-            'debug',
-        ];
+        return self::LOG_LEVELS[$this->getMode()];
     }
 
     /**
