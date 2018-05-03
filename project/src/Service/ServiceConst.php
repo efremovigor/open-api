@@ -19,4 +19,5 @@ final class ServiceConst
     public const CACHE_MAN = 'cache_manager';
     public const MIDDLEWARES = 'middlewares_manager';
     public const ROUTER = 'router';
+    public const PROFILER = 'profiler';
 }

@@ -13,6 +13,7 @@ use Service\Router;
 use Service\Serializer;
 use Service\ServiceConst;
 use Service\Socket;
+use Service\XhprofProfiler;
 use Service\YmlParser;
 
 class App extends AppKernel
@@ -45,7 +46,8 @@ class App extends AppKernel
             ServiceConst::SERIALIZER => new ContainerItem(Serializer::class),
             ServiceConst::CACHE_MAN => new ContainerItem(Cache::class),
             ServiceConst::MIDDLEWARES => new ContainerItem(MiddlewareSplQueue::class, [ContainerRegistry::CONTAINER]),
-            ServiceConst::ROUTER => new ContainerItem(Router::class, [ServiceConst::YML_PARSER])
+            ServiceConst::ROUTER => new ContainerItem(Router::class, [ServiceConst::YML_PARSER]),
+            ServiceConst::PROFILER => new ContainerItem(XhprofProfiler::class),
         ];
     }
 }
