@@ -41,6 +41,7 @@ RUN \
     apt-get install -y php7.2-json php7.2-mbstring php-mcrypt php7.2-mysql php7.2-opcache php7.2-soap && \
     apt-get install -y php7.2-sqlite3 php7.2-xml php7.2-xmlrpc php7.2-xsl php7.2-zip php7.2-intl php-yaml phpunit;
 
+# xhprof install
 RUN git clone https://github.com/longxinH/xhprof /tmp/xhprof
 
 RUN \

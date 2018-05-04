@@ -15,6 +15,9 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LogLevel;
+use Service\Logger;
+use Service\ServiceConst;
 
 abstract class AbstractMiddleware implements MiddlewareInterface
 {
@@ -44,6 +47,11 @@ abstract class AbstractMiddleware implements MiddlewareInterface
     protected $response;
 
     /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
      * AbstractMiddleware constructor.
      * @param MiddlewareSplQueue $middlewareCollection
      * @param ContainerInterface $container
@@ -52,6 +60,7 @@ abstract class AbstractMiddleware implements MiddlewareInterface
     {
         $this->middlewareCollection = $middlewareCollection;
         $this->container = $container;
+        $this->logger = $this->container->get(ServiceConst::LOGGER);
     }
 
     /**
@@ -68,6 +77,7 @@ abstract class AbstractMiddleware implements MiddlewareInterface
         }
 
         try {
+            $this->logger->log(LogLevel::INFO, \get_class($this).' - init');
             $this->before();
             $this->pushResponseNext();
             if (!$this->middlewareCollection->isEmpty()) {
@@ -101,6 +111,14 @@ abstract class AbstractMiddleware implements MiddlewareInterface
 
     protected function after(): void
     {
+    }
+
+    /**
+     * @return Logger
+     */
+    protected function getLogger(): Logger
+    {
+        return $this->logger;
     }
 
 }

@@ -14,8 +14,8 @@ use Psr\Log\AbstractLogger;
 class MailLogger extends AbstractLogger
 {
 
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = array()): void
     {
-        // TODO: Implement log() method.
+        //to send in mail stack
     }
 }

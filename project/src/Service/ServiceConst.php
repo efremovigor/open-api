@@ -20,4 +20,5 @@ final class ServiceConst
     public const MIDDLEWARES = 'middlewares_manager';
     public const ROUTER = 'router';
     public const PROFILER = 'profiler';
+    public const DEBUG_LOGGER = 'debug_logger';
 }

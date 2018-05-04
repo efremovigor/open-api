@@ -74,6 +74,9 @@ class Serializer
                      * object -> array
                      */
                     case \is_object($source) && $source instanceOf PropertyAccessInterface:
+                        if($subject === null){
+                            $subject = [];
+                        }
                         $this->objectToArray($source, $subject, $params);
                         break;
                     /**

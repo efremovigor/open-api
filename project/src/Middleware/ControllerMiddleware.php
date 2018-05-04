@@ -13,17 +13,6 @@ use Core\Service\Middleware\AbstractMiddleware;
 class ControllerMiddleware extends AbstractMiddleware
 {
 
-    /**
-     * Process an incoming server request and return a response, optionally delegating
-     * response creation to a handler.
-     * @return void
-     */
-
-    protected function before(): void
-    {
-        echo "ControllerMiddleware - init \r\n ";
-    }
-
     public function getName(): string
     {
         return 'controller';

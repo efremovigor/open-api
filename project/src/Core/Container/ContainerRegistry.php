@@ -23,7 +23,10 @@ class ContainerRegistry extends AbstractRegistry
 {
     public const CONTAINER = 'container';
 
-    private function getCoreServices()
+    /**
+     * @return array
+     */
+    private function getCoreServices(): array
     {
         return [
             CoreServiceConst::SERIALIZER => new ContainerItem(Serializer::class),
@@ -54,8 +57,17 @@ class ContainerRegistry extends AbstractRegistry
 
     public function __construct()
     {
+        /**
+         * Регистрируем самого себя в инстансах
+         */
         self::$instances[self::CONTAINER] = $this;
+        /**
+         * Регистрируем сервисы ядра
+         */
         $this->services = $this->getCoreServices();
+        /**
+         * Регистрируем остальные сервисы
+         */
         $this->services = array_merge($this->services,$this->getConfigManager()->get()->getComponents()->getServices());
     }
 
@@ -70,11 +82,19 @@ class ContainerRegistry extends AbstractRegistry
         return new $name(...$this->getInstanceArguments($containerItem));
     }
 
+    /**
+     * @param string $key
+     * @return ContainerItemInterface
+     */
     private function getContainerItem(string $key): ContainerItemInterface
     {
         return $this->getList()[$key];
     }
 
+    /**
+     * @param ContainerItemInterface $item
+     * @return array
+     */
     private function getInstanceArguments(ContainerItemInterface $item): array
     {
         $list = [];

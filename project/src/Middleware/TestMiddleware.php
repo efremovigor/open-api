@@ -13,16 +13,6 @@ use Core\Service\Middleware\AbstractMiddleware;
 
 class TestMiddleware extends AbstractMiddleware
 {
-
-    /**
-     * @throws \Psr\Container\ContainerExceptionInterface
-     */
-    protected function before(): void
-    {
-        echo "TestMiddleware - init\r\n";
-    }
-
-
     public function getName(): string
     {
         return 'env';

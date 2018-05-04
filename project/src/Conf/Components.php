@@ -10,7 +10,9 @@ namespace Conf;
 
 
 use Core\Container\ContainerItem;
+use Core\Service\CoreServiceConst;
 use Service\Cache;
+use Service\DebugLogger;
 use Service\Logger;
 use Service\Router;
 use Service\ServiceConst;
@@ -35,7 +37,8 @@ class Components implements ComponentsInterface
     public function getServices(): array
     {
         return [
-            ServiceConst::LOGGER => new ContainerItem(Logger::class),
+            ServiceConst::DEBUG_LOGGER => new ContainerItem(DebugLogger::class),
+            ServiceConst::LOGGER => new ContainerItem(Logger::class,[CoreServiceConst::ENV,ServiceConst::DEBUG_LOGGER,CoreServiceConst::SERIALIZER]),
             ServiceConst::CACHE_MAN => new ContainerItem(Cache::class),
             ServiceConst::ROUTER => new ContainerItem(Router::class, [ServiceConst::YML_PARSER]),
             ServiceConst::PROFILER => new ContainerItem(XhprofProfiler::class),

@@ -13,14 +13,6 @@ use Core\Service\Middleware\AbstractMiddleware;
 
 class DebugMiddleware extends AbstractMiddleware
 {
-
-
-    protected function before(): void
-    {
-        echo "DebugMiddleware - init\r\n";
-    }
-
-
     public function getName(): string
     {
         return 'debug';

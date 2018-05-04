@@ -10,6 +10,7 @@ namespace Middleware;
 
 
 use Core\Service\Middleware\AbstractMiddleware;
+use Psr\Log\LogLevel;
 use Service\ServiceConst;
 
 class InitMiddleware extends AbstractMiddleware
@@ -20,7 +21,6 @@ class InitMiddleware extends AbstractMiddleware
      */
     protected function before(): void
     {
-        echo "InitMiddleware - init\r\n";
         $this->initConf();
         $this->container->get(ServiceConst::CACHE_MAN)->getRedis();
     }
@@ -37,7 +37,7 @@ class InitMiddleware extends AbstractMiddleware
     private function initConf(): void
     {
 
-        var_dump($this->container->get(ServiceConst::CONF_MANAGER)->get());
+        $this->getLogger()->log(LogLevel::INFO,$this->container->get(ServiceConst::CONF_MANAGER)->get());
     }
 
 }

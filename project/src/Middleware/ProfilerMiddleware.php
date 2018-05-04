@@ -11,6 +11,7 @@ namespace Middleware;
 
 use Core\Service\ConfigManager;
 use Core\Service\Middleware\AbstractMiddleware;
+use Psr\Log\LogLevel;
 use Service\Profiler\ProfilerInterface;
 use Service\ServiceConst;
 
@@ -22,7 +23,6 @@ class ProfilerMiddleware extends AbstractMiddleware
      */
     protected function before(): void
     {
-        echo "ProfilerMiddleware - init\r\n";
         if($this->getConf()->get()->getEnvConf()->isProfiling()){
             $this->getProfiler()->start();
         }
@@ -35,7 +35,8 @@ class ProfilerMiddleware extends AbstractMiddleware
     {
         if($this->getConf()->get()->getEnvConf()->isProfiling()){
             $this->getProfiler()->end();
-            var_dump($this->getProfiler()->info());
+            $this->getLogger()->log(LogLevel::INFO,$this->getProfiler()->info());
+            var_dump($this->container->get(ServiceConst::DEBUG_LOGGER)->getLog());
         }
     }
 
