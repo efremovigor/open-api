@@ -48,8 +48,6 @@ class Environment
             LogLevel::ERROR,
             LogLevel::WARNING,
             LogLevel::NOTICE,
-            LogLevel::INFO,
-            LogLevel::DEBUG,
         ]
     ];
 

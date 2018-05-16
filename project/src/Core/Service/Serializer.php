@@ -182,7 +182,7 @@ class Serializer
                 \is_object($subject->$getMethod()) &&
                 (\is_array($source->$getMethod()) || \is_object($source->$getMethod()))
             ) {
-                $this->normalize($source->$getMethod(), $subject->$getMethod());
+                $this->normalize($source->$getMethod(), $subject->$getMethod(),$params);
                 continue;
             }
             /**
@@ -218,7 +218,7 @@ class Serializer
              */
             if (\is_array($value) && method_exists($subject, $getMethod) && $subject->$getMethod() instanceof ContainsCollectionInterface) {
                 foreach ((array) $value as $subKey => $subValue) {
-                    $subject->$getMethod()->set($subKey, $this->normalize($subValue, $subject->$getMethod()->getClass()));
+                    $subject->$getMethod()->set($subKey, $this->normalize($subValue, $subject->$getMethod()->getClass(),$params));
                 }
                 continue;
             }
@@ -241,7 +241,7 @@ class Serializer
                 method_exists($subject, $getMethod) &&
                 \is_object($subject->$getMethod())
             ) {
-                $this->normalize($value, $subject->$getMethod($value));
+                $this->normalize($value, $subject->$getMethod($value),$params);
                 continue;
             }
             /**
@@ -291,7 +291,7 @@ class Serializer
             if (method_exists($source, $getMethod) &&
                 (\is_array($source->$getMethod()) || \is_object($source->$getMethod()))
             ) {
-                $subject[$property] = $this->normalize($source->$getMethod(), $subject[$property]);
+                $subject[$property] = $this->normalize($source->$getMethod(), $subject[$property],$params);
                 continue;
             }
             /**

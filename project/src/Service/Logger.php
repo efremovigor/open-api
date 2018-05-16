@@ -12,7 +12,6 @@ use Core\Service\Environment;
 use Core\Service\Serializer;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
-use Service\DebugLogger;
 use Service\Logger\MailLogger;
 use Service\Logger\StdErrLogger;
 
@@ -27,13 +26,14 @@ class Logger extends AbstractLogger
      * @var LoggerInterface[]
      */
     private $loggers;
+
     /**
      * @var Serializer
      */
     private $serializer;
 
 
-    public function __construct(Environment $environment, DebugLogger $debug,Serializer $serializer)
+    public function __construct(Environment $environment, DebugLogger $debug, Serializer $serializer)
     {
         $this->environment = $environment;
         $this->serializer = $serializer;
@@ -61,10 +61,10 @@ class Logger extends AbstractLogger
     {
         if (\in_array($level, $this->environment->getLogLevel(), true)) {
             foreach ($this->loggers as $logger) {
-                if(!\is_string($message)){
+                if (!\is_string($message)) {
                     $message = $this->serializer->normalize($message);
                 }
-                $logger->log($level,$message , $context);
+                $logger->log($level, $message, $context);
             }
         }
     }
