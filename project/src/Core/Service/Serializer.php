@@ -35,9 +35,7 @@ class Serializer
         switch (true) {
             case \is_object($subject):
                 switch (true) {
-                    /**
-                     * object -> object
-                     */
+                    /** object -> object */
                     case $source instanceOf PropertyAccessInterface:
                         $this->objectToObject($source, $subject, $params);
                         break;
@@ -52,17 +50,13 @@ class Serializer
                             $this->arrayToObject($source, $subject, $params);
                         }
                         break;
-                    /**
-                     * json -> object
-                     */
+                    /** json -> object */
                     case $this->is_json($source):
                         $this->normalize(json_decode($source, true), $subject, $params);
                         break;
                 }
                 break;
-            /**
-             * Создает класс по имени и рекурсивно вызываем
-             */
+            /** Создает класс по имени и рекурсивно вызываем */
             case \is_string($subject):
                 if (class_exists($subject)) {
                     $subject = $this->normalize($source, new $subject(), $params);
@@ -71,32 +65,35 @@ class Serializer
             case \is_array($subject) || $subject === null:
                 switch (true) {
                     /**
-                     * object -> array
+                     * Если обьект преобразования коллекция
+                     * Подменяем сорс внутренними элементами
                      */
+                    case  \is_object($source) && $source instanceof ContainsCollectionInterface:
+                        $subject = $this->normalize($source->getElements(), $subject, $params);
+                        break;
+                    /** array -> array */
+                    case \is_array($source):
+                        foreach ($source as $key => $element) {
+                            /** Если элемент массива - массив, и он определен в субьекте - то лезем внутрь */
+                            if (\is_array($element) && isset($subject[$key])) {
+                                $subject[$key] = $this->normalize($element, $subject[$key], $params);
+                                /** если внутри массива обьект */
+                            } elseif(\is_object($element) && $element instanceOf PropertyAccessInterface) {
+                                $subject[$key] = $this->normalize($element, [], $params);
+                                /** стандартное поведение */
+                            } else {
+                                $subject[$key] = $element;
+                            }
+                        }
+                        break;
+                    /** object -> array */
                     case \is_object($source) && $source instanceOf PropertyAccessInterface:
                         if($subject === null){
                             $subject = [];
                         }
                         $this->objectToArray($source, $subject, $params);
                         break;
-                    /**
-                     * array -> array
-                     */
-                    case \is_array($source):
-                        foreach ($source as $key => $element) {
-                            /**
-                             * Если элемент массива - массив, и он определен в субьекте - то лезем внутрь
-                             */
-                            if (\is_array($element) && isset($subject[$key])) {
-                                $subject[$key] = $this->normalize($element, $subject[$key], $params);
-                            } else {
-                                $subject[$key] = $element;
-                            }
-                        }
-                        break;
-                    /**
-                     * array -> json
-                     */
+                    /** array -> json */
                     case !\is_object($source) && $this->is_json($source):
                         $subject = json_decode($source, true);
                         break;
@@ -275,13 +272,32 @@ class Serializer
 
             if (\is_array($source->$getMethod())) {
 
+                /**
+                 * Разбор ситуации если свойство обьекта массив в котором могут быть обьекты
+                 */
+                $sourceData = $source->$getMethod();
+                /**
+                 * $fakeSubject не пуст если внутри $sourceData лежат обьекты
+                 */
+                $fakeSubject = [];
+                foreach($sourceData as $key => &$data){
+                    if(\is_object($data) && $data instanceof PropertyAccessInterface){
+                        $fakeSubject[$key] = [];
+                        $this->objectToArray($data,$fakeSubject[$key]);
+                    }
+                }
+                $sourceData = array_replace($sourceData,$fakeSubject);
+
+                /**
+                 * Если субьект заполнен и есть разрешение
+                 */
                 if (!empty($subject[$property])) {
-                    if ($this->isAddable($params) === false && \count($source->$getMethod()) > 0) {
+                    if ($this->isAddable($params) === false && \count($sourceData) > 0) {
                         continue;
                     }
-                    $subject[$property] = array_merge($source->$getMethod(), $subject[$property]);
+                    $subject[$property] = array_merge($sourceData, $subject[$property]);
                 } else {
-                    $subject[$property] = $source->$getMethod();
+                    $subject[$property] = array_merge($sourceData);
                 }
                 continue;
             }
