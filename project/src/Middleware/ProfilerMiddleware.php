@@ -10,6 +10,7 @@ namespace Middleware;
 
 
 use Core\Service\ConfigManager;
+use Core\Service\CoreServiceConst;
 use Core\Service\Middleware\AbstractMiddleware;
 use Psr\Log\LogLevel;
 use Service\Profiler\ProfilerInterface;
@@ -60,6 +61,6 @@ class ProfilerMiddleware extends AbstractMiddleware
      */
     public function getConf(): ConfigManager
     {
-        return $this->container->get(ServiceConst::CONF_MANAGER);
+        return $this->container->get(CoreServiceConst::CONF_MANAGER);
     }
 }

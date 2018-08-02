@@ -10,15 +10,9 @@ namespace Service;
 
 final class ServiceConst
 {
-    public const ENV = 'environment';
-    public const LOGGER = 'logger';
-    public const SOCKET = 'socket';
-    public const YML_PARSER = 'yml_parser';
-    public const CONF_MANAGER = 'conf_manager';
-    public const SERIALIZER = 'serializer';
-    public const CACHE_MAN = 'cache_manager';
-    public const MIDDLEWARES = 'middlewares_manager';
-    public const ROUTER = 'router';
-    public const PROFILER = 'profiler';
-    public const DEBUG_LOGGER = 'debug_logger';
+    public const LOGGER = Logger::class;
+    public const CACHE_MAN = Cache::class;
+    public const ROUTER = Router::class;
+    public const PROFILER = XhprofProfiler::class;
+    public const DEBUG_LOGGER = DebugLogger::class;
 }

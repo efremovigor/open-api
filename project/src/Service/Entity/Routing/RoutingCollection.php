@@ -13,16 +13,17 @@ use Core\Service\Entity\ContainsCollectionInterface;
  */
 class RoutingCollection extends AbstractCollection implements ContainsCollectionInterface
 {
-    /**
-     * @return Path[]
-     */
-    public function getAll(): array
-    {
-        return $this->elements;
-    }
 
     public function getClass(): string
     {
         return Path::class;
+    }
+
+    /**
+     * @return Path[]
+     */
+    public function getElements(): array
+    {
+        return $this->elements;
     }
 }

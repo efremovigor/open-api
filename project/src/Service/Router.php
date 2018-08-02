@@ -50,7 +50,7 @@ class Router
     {
         if ($this->selectPath === null) {
             $analyzer = new UrlAnalyzer();
-            foreach ($this->routingCollection->getAll() as $path) {
+            foreach ($this->routingCollection->getElements() as $path) {
                 if (preg_match($analyzer->getMatch($path), $this->requestUri)) {
                     $this->selectPath = $path;
                     break;

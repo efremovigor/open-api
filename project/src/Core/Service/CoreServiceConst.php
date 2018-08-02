@@ -8,13 +8,16 @@
 
 namespace Core\Service;
 
+use Core\Container\ContainerRegistry;
+
 final class CoreServiceConst
 {
-    public const ENV = 'environment';
-    public const SOCKET = 'socket';
-    public const YML_PARSER = 'yml_parser';
-    public const CONF_MANAGER = 'conf_manager';
-    public const SERIALIZER = 'serializer';
-    public const REQUEST_HANDLER = 'request_handler';
-    public const MIDDLEWARES = 'middlewares';
+    public const ENV = Environment::class;
+    public const SOCKET = Socket::class;
+    public const YML_PARSER = YmlParser::class;
+    public const CONF_MANAGER = ConfigManager::class;
+    public const SERIALIZER = Serializer::class;
+    public const REQUEST_HANDLER = RequestHandler::class;
+    public const MIDDLEWARES = MiddlewareSplQueue::class;
+    public const CONTAINER = ContainerRegistry::class;
 }

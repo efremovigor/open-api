@@ -14,4 +14,6 @@ interface ContainsCollectionInterface
     public function getClass(): string;
 
     public function set($key, $element): void;
+
+    public function getElements(): array;
 }

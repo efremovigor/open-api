@@ -11,12 +11,7 @@ namespace Conf;
 
 use Core\Container\ContainerItem;
 use Core\Service\CoreServiceConst;
-use Service\Cache;
-use Service\DebugLogger;
-use Service\Logger;
-use Service\Router;
 use Service\ServiceConst;
-use Service\XhprofProfiler;
 
 class Components implements ComponentsInterface
 {
@@ -37,11 +32,11 @@ class Components implements ComponentsInterface
     public function getServices(): array
     {
         return [
-            ServiceConst::DEBUG_LOGGER => new ContainerItem(DebugLogger::class),
-            ServiceConst::LOGGER => new ContainerItem(Logger::class,[CoreServiceConst::ENV,ServiceConst::DEBUG_LOGGER,CoreServiceConst::SERIALIZER]),
-            ServiceConst::CACHE_MAN => new ContainerItem(Cache::class),
-            ServiceConst::ROUTER => new ContainerItem(Router::class, [ServiceConst::YML_PARSER]),
-            ServiceConst::PROFILER => new ContainerItem(XhprofProfiler::class),
+            ServiceConst::DEBUG_LOGGER => new ContainerItem(ServiceConst::DEBUG_LOGGER),
+            ServiceConst::LOGGER => new ContainerItem(ServiceConst::LOGGER, [CoreServiceConst::ENV, ServiceConst::DEBUG_LOGGER, CoreServiceConst::SERIALIZER]),
+            ServiceConst::CACHE_MAN => new ContainerItem(ServiceConst::CACHE_MAN),
+            ServiceConst::ROUTER => new ContainerItem(ServiceConst::ROUTER, [CoreServiceConst::YML_PARSER]),
+            ServiceConst::PROFILER => new ContainerItem(ServiceConst::PROFILER),
         ];
     }
 }

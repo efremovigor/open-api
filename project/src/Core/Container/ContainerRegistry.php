@@ -11,17 +11,10 @@ namespace Core\Container;
 
 use Core\AbstractRegistry;
 use Core\Service\ConfigManager;
-use Core\Service\Environment;
-use Core\Service\MiddlewareSplQueue;
-use Core\Service\RequestHandler;
-use Core\Service\Serializer;
 use Core\Service\CoreServiceConst;
-use Core\Service\Socket;
-use Core\Service\YmlParser;
 
 class ContainerRegistry extends AbstractRegistry
 {
-    public const CONTAINER = 'container';
 
     /**
      * @return array
@@ -29,16 +22,16 @@ class ContainerRegistry extends AbstractRegistry
     private function getCoreServices(): array
     {
         return [
-            CoreServiceConst::SERIALIZER => new ContainerItem(Serializer::class),
-            CoreServiceConst::ENV => new ContainerItem(Environment::class),
-            CoreServiceConst::SOCKET => new ContainerItem(Socket::class),
-            CoreServiceConst::YML_PARSER => new ContainerItem(YmlParser::class, [CoreServiceConst::SERIALIZER]),
+            CoreServiceConst::SERIALIZER => new ContainerItem(CoreServiceConst::SERIALIZER),
+            CoreServiceConst::ENV => new ContainerItem(CoreServiceConst::ENV),
+            CoreServiceConst::SOCKET => new ContainerItem(CoreServiceConst::SOCKET),
+            CoreServiceConst::YML_PARSER => new ContainerItem(CoreServiceConst::YML_PARSER, [CoreServiceConst::SERIALIZER]),
             CoreServiceConst::CONF_MANAGER => new ContainerItem(
-                ConfigManager::class,
+                CoreServiceConst::CONF_MANAGER,
                 [CoreServiceConst::ENV, CoreServiceConst::SOCKET, CoreServiceConst::YML_PARSER]
             ),
-            CoreServiceConst::REQUEST_HANDLER => new ContainerItem(RequestHandler::class,[CoreServiceConst::MIDDLEWARES]),
-            CoreServiceConst::MIDDLEWARES => new ContainerItem(MiddlewareSplQueue::class, [self::CONTAINER,CoreServiceConst::CONF_MANAGER]),
+            CoreServiceConst::REQUEST_HANDLER => new ContainerItem(CoreServiceConst::REQUEST_HANDLER,[CoreServiceConst::MIDDLEWARES]),
+            CoreServiceConst::MIDDLEWARES => new ContainerItem(CoreServiceConst::MIDDLEWARES, [CoreServiceConst::CONTAINER,CoreServiceConst::CONF_MANAGER]),
         ];
     }
 
@@ -60,7 +53,7 @@ class ContainerRegistry extends AbstractRegistry
         /**
          * Регистрируем самого себя в инстансах
          */
-        self::$instances[self::CONTAINER] = $this;
+        self::$instances[CoreServiceConst::CONTAINER] = $this;
         /**
          * Регистрируем сервисы ядра
          */

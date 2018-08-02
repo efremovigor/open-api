@@ -18,4 +18,9 @@ class PathParams extends AbstractCollection implements ContainsCollectionInterfa
     {
         return Parameter::class;
     }
+
+    public function getElements(): array
+    {
+        return $this->elements;
+    }
 }

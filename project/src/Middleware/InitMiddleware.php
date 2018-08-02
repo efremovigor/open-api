@@ -9,6 +9,7 @@
 namespace Middleware;
 
 
+use Core\Service\CoreServiceConst;
 use Core\Service\Middleware\AbstractMiddleware;
 use Psr\Log\LogLevel;
 use Service\ServiceConst;
@@ -37,7 +38,7 @@ class InitMiddleware extends AbstractMiddleware
     private function initConf(): void
     {
 
-        $this->getLogger()->log(LogLevel::INFO,$this->container->get(ServiceConst::CONF_MANAGER)->get());
+        $this->getLogger()->log(LogLevel::INFO,$this->container->get(CoreServiceConst::CONF_MANAGER)->get());
     }
 
 }
