@@ -56,6 +56,7 @@ class Logger extends AbstractLogger
      * @param array $context
      *
      * @return void
+     * @throws \Exception
      */
     public function log($level, $message, array $context = array()): void
     {

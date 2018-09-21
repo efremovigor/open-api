@@ -19,7 +19,7 @@ class YmlParser
                     $resource = $this->serializer->normalize(
                         $this->getYml($place . '/' . $file),
                         $resource,
-                        [Serializer::REWRITABLE, Serializer::ADDABLE]
+                        Serializer::REWRITABLE | Serializer::ADDABLE
                     );
                 }
             }
@@ -32,7 +32,7 @@ class YmlParser
 
     public function packPath(string $path, string $class)
     {
-        return $this->serializer->normalize($this->getYml($path), $class, [Serializer::REWRITABLE, Serializer::ADDABLE]);
+        return $this->serializer->normalize($this->getYml($path), $class, Serializer::REWRITABLE | Serializer::ADDABLE);
     }
 
     private function isFile(string $path): bool
