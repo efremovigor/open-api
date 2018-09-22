@@ -8,7 +8,7 @@
 
 namespace Core\Service;
 
-use Core\Container\ContainerRegistry;
+use Core\Container\ContainerServiceRegistry;
 
 final class CoreServiceConst
 {
@@ -19,5 +19,5 @@ final class CoreServiceConst
     public const SERIALIZER = Serializer::class;
     public const REQUEST_HANDLER = RequestHandler::class;
     public const MIDDLEWARES = MiddlewareSplQueue::class;
-    public const CONTAINER = ContainerRegistry::class;
+    public const CONTAINER = ContainerServiceRegistry::class;
 }

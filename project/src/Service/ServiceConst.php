@@ -15,4 +15,8 @@ final class ServiceConst
     public const ROUTER = Router::class;
     public const PROFILER = XhprofProfiler::class;
     public const DEBUG_LOGGER = DebugLogger::class;
+	public const REPOSITORY = ContainerRepositoryRegistry::class;
+	public const ORM_CONNECTION = OrmConnection::class;
+	public const REDIS_CONNECTION = RedisConnection::class;
+
 }

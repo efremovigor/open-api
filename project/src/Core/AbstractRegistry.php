@@ -2,6 +2,8 @@
 
 namespace Core;
 
+use Core\Container\ContainerItem;
+use Core\Container\ContainerItemInterface;
 use Psr\Container\ContainerInterface;
 
 abstract class AbstractRegistry implements ContainerInterface
@@ -12,16 +14,50 @@ abstract class AbstractRegistry implements ContainerInterface
      */
     protected static $instances = [];
 
-    /**
-     * @return array|mixed
-     */
-    abstract protected function getList();
+	/**
+	 * @var ContainerItem[]
+	 */
+	protected $services;
+
+	/**
+	 * @return array
+	 */
+	protected function getList(): array
+	{
+		return $this->services;
+	}
 
     /**
      * @param mixed $id
      * @return mixed
      */
-    abstract protected function createInstance($id);
+    protected function createInstance($id){
+	    $containerItem = $this->getContainerItem($id);
+	    $name = $containerItem->getClass();
+	    return new $name(...$this->getInstanceArguments($containerItem));
+    }
+
+	/**
+	 * @param string $key
+	 * @return ContainerItemInterface
+	 */
+	private function getContainerItem(string $key): ContainerItemInterface
+	{
+		return $this->getList()[$key];
+	}
+
+	/**
+	 * @param ContainerItemInterface $item
+	 * @return array
+	 */
+	private function getInstanceArguments(ContainerItemInterface $item): array
+	{
+		$list = [];
+		foreach ($item->getArguments() as $argument) {
+			$list[] = $this->get($argument);
+		}
+		return $list;
+	}
 
     /**
      * @param string $id

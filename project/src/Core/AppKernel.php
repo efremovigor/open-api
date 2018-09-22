@@ -8,7 +8,7 @@
 
 namespace Core;
 
-use Core\Container\ContainerRegistry;
+use Core\Container\ContainerServiceRegistry;
 use Core\Service\CoreServiceConst;
 use Core\Service\RequestHandler;
 
@@ -17,7 +17,7 @@ abstract class AppKernel extends Kernel
 
 
     /**
-     * @var ContainerRegistry
+     * @var ContainerServiceRegistry
      */
     private $container;
 
@@ -26,7 +26,7 @@ abstract class AppKernel extends Kernel
      */
     public function __construct()
     {
-        $this->container = new ContainerRegistry();
+        $this->container = new ContainerServiceRegistry();
     }
 
     public function run(): void

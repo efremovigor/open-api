@@ -13,7 +13,7 @@ use Core\AbstractRegistry;
 use Core\Service\ConfigManager;
 use Core\Service\CoreServiceConst;
 
-class ContainerRegistry extends AbstractRegistry
+class ContainerServiceRegistry extends AbstractRegistry
 {
 
     /**
@@ -35,25 +35,12 @@ class ContainerRegistry extends AbstractRegistry
         ];
     }
 
-    /**
-     * @var ContainerItem[]
-     */
-    private $services;
-
-    /**
-     * @return array
-     */
-    protected function getList(): array
-    {
-        return $this->services;
-    }
-
     public function __construct()
     {
         /**
          * Регистрируем самого себя в инстансах
          */
-        self::$instances[CoreServiceConst::CONTAINER] = $this;
+	    static::$instances[CoreServiceConst::CONTAINER] = $this;
         /**
          * Регистрируем сервисы ядра
          */
@@ -62,39 +49,6 @@ class ContainerRegistry extends AbstractRegistry
          * Регистрируем остальные сервисы
          */
         $this->services = array_merge($this->services,$this->getConfigManager()->get()->getComponents()->getServices());
-    }
-
-    /**
-     * @param mixed $id
-     * @return mixed
-     */
-    protected function createInstance($id)
-    {
-        $containerItem = $this->getContainerItem($id);
-        $name = $containerItem->getClass();
-        return new $name(...$this->getInstanceArguments($containerItem));
-    }
-
-    /**
-     * @param string $key
-     * @return ContainerItemInterface
-     */
-    private function getContainerItem(string $key): ContainerItemInterface
-    {
-        return $this->getList()[$key];
-    }
-
-    /**
-     * @param ContainerItemInterface $item
-     * @return array
-     */
-    private function getInstanceArguments(ContainerItemInterface $item): array
-    {
-        $list = [];
-        foreach ($item->getArguments() as $argument) {
-            $list[] = $this->get($argument);
-        }
-        return $list;
     }
 
     /**

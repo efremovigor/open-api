@@ -14,4 +14,16 @@ interface EnvConfInterface
 
 	public function isProfiling(): bool;
 
+	public function getSqlDsn();
+
+	public function getSqlUser();
+
+	public function getSqlPassword();
+
+	public function getRedisHost();
+
+	public function getRedisPort();
+
+	public function getRedisPassword();
+
 }
