@@ -10,6 +10,7 @@ namespace Repository;
 
 
 use Builder\Orm\UserBuilder;
+use Entity\Form\Login;
 use Entity\User;
 
 class UserRepository extends AbstractOrmRepository
@@ -20,16 +21,14 @@ class UserRepository extends AbstractOrmRepository
 		return new UserBuilder();
 	}
 
-	/**
-	 * @param string $login
-	 * @param        $password
-	 *
-	 * @return \Entity\User|null
-	 * @throws \Exception
-	 */
-	public function getByCred(string $login, string $password): ?User
+    /**
+     * @param Login $form
+     * @return \Entity\User|null
+     * @throws \Exception
+     */
+	public function getByCred(Login $form): ?User
 	{
-		$query = $this->newBuilder()->getQueryCred($login, $password);
+		$query = $this->newBuilder()->getQueryCred($form->getLogin(), $form->getPassword());
 		return $this->serializer->normalize($this->fetchOne($query), User::class);
 	}
 

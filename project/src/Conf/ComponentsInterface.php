@@ -12,5 +12,6 @@ namespace Conf;
 interface ComponentsInterface
 {
     public function getMiddlewares(): array;
+
     public function getServices(): array;
 }

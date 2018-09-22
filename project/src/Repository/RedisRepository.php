@@ -16,30 +16,45 @@ use Service\RedisConnection;
 class RedisRepository
 {
 
-	/**
-	 * @var \Core\Service\Serializer
-	 */
-	private $serializer;
+    /**
+     * @var \Core\Service\Serializer
+     */
+    private $serializer;
 
-	/**
-	 * @var \Service\RedisConnection
-	 */
-	private $redisConnection;
+    /**
+     * @var \Service\RedisConnection
+     */
+    private $redisConnection;
 
-	public function __construct(RedisConnection $redisConnection, Serializer $serializer)
-	{
-		$this->serializer = $serializer;
-		$this->redisConnection = $redisConnection;
-	}
+    public function __construct(RedisConnection $redisConnection, Serializer $serializer)
+    {
+        $this->serializer      = $serializer;
+        $this->redisConnection = $redisConnection;
+    }
 
-	/**
-	 * @param string $sessionKey
-	 *
-	 * @return \Entity\User|null
-	 * @throws \Exception
-	 */
-	public function getBySession(string $sessionKey): ?User
-	{
-		return $this->serializer->normalize($this->redisConnection->getConnection()->get('user_session_' . $sessionKey), User::class);
-	}
+    /**
+     * @param string $sessionKey
+     *
+     * @return \Entity\User|null
+     * @throws \Exception
+     */
+    public function getBySession(string $sessionKey): ?User
+    {
+        return $this->serializer->normalize($this->redisConnection->getConnection()->get($this->getSessionKey($sessionKey)), User::class);
+    }
+
+    /**
+     * @param User $user
+     * @return void
+     * @throws \Exception
+     */
+    public function initSession(User $user): void
+    {
+        $this->redisConnection->getConnection()->set($this->getSessionKey($user->getId()), $this->serializer->jsonSignificant($user));
+    }
+
+    private function getSessionKey(string $key): string
+    {
+        return 'user_session_' . $key;
+    }
 }

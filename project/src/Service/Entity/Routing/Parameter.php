@@ -14,13 +14,14 @@ use Core\Service\Entity\PropertyAccessInterface;
 
 class Parameter implements PropertyAccessInterface
 {
-    private $value;
+    private $expr;
     private $type;
+    private $value;
 
     public function getProperties(): array
     {
         return [
-            'value',
+            'expr',
             'type'
         ];
     }
@@ -28,17 +29,17 @@ class Parameter implements PropertyAccessInterface
     /**
      * @return mixed
      */
-    public function getValue()
+    public function getExpr()
     {
-        return $this->value;
+        return $this->expr;
     }
 
     /**
-     * @param mixed $value
+     * @param mixed $expr
      */
-    public function setValue($value): void
+    public function setExpr($expr): void
     {
-        $this->value = $value;
+        $this->expr = $expr;
     }
 
     /**
@@ -55,6 +56,22 @@ class Parameter implements PropertyAccessInterface
     public function setType($type): void
     {
         $this->type = $type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function setValue($value): void
+    {
+        $this->value = $value;
     }
 
 

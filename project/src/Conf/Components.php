@@ -39,14 +39,15 @@ class Components implements ComponentsInterface
     public function getServices(): array
     {
         return [
-            ServiceConst::DEBUG_LOGGER => new ContainerItem(ServiceConst::DEBUG_LOGGER),
-            ServiceConst::LOGGER => new ContainerItem(ServiceConst::LOGGER, [CoreServiceConst::ENV, ServiceConst::DEBUG_LOGGER, CoreServiceConst::SERIALIZER]),
-            ServiceConst::CACHE_MAN => new ContainerItem(ServiceConst::CACHE_MAN),
-            ServiceConst::ROUTER => new ContainerItem(ServiceConst::ROUTER, [CoreServiceConst::YML_PARSER]),
-            ServiceConst::PROFILER => new ContainerItem(ServiceConst::PROFILER),
-            ServiceConst::REPOSITORY => new ContainerItem(ServiceConst::REPOSITORY,[CoreServiceConst::CONTAINER]),
+            ServiceConst::DEBUG_LOGGER     => new ContainerItem(ServiceConst::DEBUG_LOGGER),
+            ServiceConst::LOGGER           => new ContainerItem(ServiceConst::LOGGER, [CoreServiceConst::ENV, ServiceConst::DEBUG_LOGGER, CoreServiceConst::SERIALIZER]),
+            ServiceConst::CACHE_MAN        => new ContainerItem(ServiceConst::CACHE_MAN),
+            ServiceConst::ROUTER           => new ContainerItem(ServiceConst::ROUTER, [CoreServiceConst::YML_PARSER]),
+            ServiceConst::PROFILER         => new ContainerItem(ServiceConst::PROFILER),
+            ServiceConst::REPOSITORY       => new ContainerItem(ServiceConst::REPOSITORY, [CoreServiceConst::CONTAINER]),
             ServiceConst::ORM_CONNECTION   => new ContainerItem(ServiceConst::ORM_CONNECTION, [CoreServiceConst::CONF_MANAGER]),
             ServiceConst::REDIS_CONNECTION => new ContainerItem(ServiceConst::REDIS_CONNECTION, [CoreServiceConst::CONF_MANAGER]),
+            ServiceConst::TEMPLATER        => new ContainerItem(ServiceConst::TEMPLATER),
         ];
     }
 }

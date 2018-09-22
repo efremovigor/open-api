@@ -12,57 +12,57 @@ namespace Conf\Env;
 class Prod extends BaseConf
 {
 
-	public function isProfiling(): bool
-	{
-		return false;
-	}
+    public function isProfiling(): bool
+    {
+        return false;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getSqlDsn(): string
-	{
-		return 'mysql:dbname=testdb;host=127.0.0.1';
-	}
+    /**
+     * @return mixed
+     */
+    public function getSqlDsn(): string
+    {
+        return 'mysql:dbname=testdb;host=127.0.0.1';
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getSqlUser(): string
-	{
-		return 'dbuser';
-	}
+    /**
+     * @return mixed
+     */
+    public function getSqlUser(): string
+    {
+        return 'dbuser';
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getSqlPassword(): string
-	{
-		return 'dbpass';
-	}
+    /**
+     * @return mixed
+     */
+    public function getSqlPassword(): string
+    {
+        return 'dbpass';
+    }
 
 
-	/**
-	 * @return mixed
-	 */
-	public function getRedisHost() :string
-	{
-		return $this->redisHost;
-	}
+    /**
+     * @return mixed
+     */
+    public function getRedisHost(): string
+    {
+        return $this->redisHost;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getRedisPort() :string
-	{
-		return $this->redisPort;
-	}
+    /**
+     * @return mixed
+     */
+    public function getRedisPort(): string
+    {
+        return $this->redisPort;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getRedisPassword() :string
-	{
-		return $this->redisPassword;
-	}
+    /**
+     * @return mixed
+     */
+    public function getRedisPassword(): string
+    {
+        return $this->redisPassword;
+    }
 }

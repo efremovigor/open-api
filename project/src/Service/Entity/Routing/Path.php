@@ -12,17 +12,18 @@ use Core\Service\Entity\PropertyAccessInterface;
 
 class Path implements PropertyAccessInterface
 {
-    private $path;
+    private $route;
     private $controller;
     private $action;
     private $methods;
     private $defaults = [];
-    private $parameters;
+    private $patternParams;
+    private $requestParams;
 
     public function getProperties(): array
     {
         return [
-            'path',
+            'route',
             'controller',
             'action',
             'methods',
@@ -32,23 +33,23 @@ class Path implements PropertyAccessInterface
 
     public function __construct()
     {
-        $this->parameters = new PathParams();
+        $this->patternParams = new PathParams();
     }
 
     /**
      * @return mixed
      */
-    public function getPath()
+    public function getRoute()
     {
-        return $this->path;
+        return $this->route;
     }
 
     /**
-     * @param mixed $path
+     * @param mixed $route
      */
-    public function setPath($path): void
+    public function setRoute($route): void
     {
-        $this->path = $path;
+        $this->route = $route;
     }
 
     /**
@@ -118,17 +119,17 @@ class Path implements PropertyAccessInterface
     /**
      * @return PathParams
      */
-    public function getParameters(): PathParams
+    public function getPatternParams(): PathParams
     {
-        return $this->parameters;
+        return $this->patternParams;
     }
 
     /**
-     * @param $parameters
+     * @param $patternParams
      */
-    public function addParameters($parameters): void
+    public function addPatternParams($patternParams): void
     {
-        $this->parameters->add($parameters);
+        $this->patternParams->add($patternParams);
     }
 
 

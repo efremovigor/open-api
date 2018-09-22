@@ -9,6 +9,11 @@ class YmlParser
      */
     private $serializer;
 
+    /**
+     * @param string $path
+     * @return array
+     * @throws \Exception
+     */
     public function getYml(string $path): array
     {
         if ($this->isFile($path)) {
@@ -30,6 +35,12 @@ class YmlParser
         return [];
     }
 
+    /**
+     * @param string $path
+     * @param string $class
+     * @return mixed
+     * @throws \Exception
+     */
     public function packPath(string $path, string $class)
     {
         return $this->serializer->normalize($this->getYml($path), $class, Serializer::REWRITABLE | Serializer::ADDABLE);

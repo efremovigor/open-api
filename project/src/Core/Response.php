@@ -19,6 +19,18 @@ class Response implements ResponseInterface
      */
     private $statusCode = 200;
 
+    private $body;
+
+    public function __construct($content = '')
+    {
+        $this->body = $content;
+    }
+
+    public function getContentType(): string
+    {
+        return 'text/html';
+    }
+
     /**
      * Retrieves the HTTP protocol version as a string.
      *
@@ -189,9 +201,9 @@ class Response implements ResponseInterface
      *
      * @return StreamInterface Returns the body as a stream.
      */
-    public function getBody()
+    public function getBody(): string
     {
-        // TODO: Implement getBody() method.
+        return $this->body;
     }
 
     /**
@@ -271,5 +283,13 @@ class Response implements ResponseInterface
     public function getReasonPhrase()
     {
         // TODO: Implement getReasonPhrase() method.
+    }
+
+    /**
+     * @param string $body
+     */
+    public function setBody(string $body)
+    {
+        $this->body = $body;
     }
 }

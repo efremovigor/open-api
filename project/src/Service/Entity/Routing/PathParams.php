@@ -23,4 +23,7 @@ class PathParams extends AbstractCollection implements ContainsCollectionInterfa
     {
         return $this->elements;
     }
+
+    public function getOnlyParams(){
+    }
 }

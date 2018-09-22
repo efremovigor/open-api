@@ -54,6 +54,8 @@ class RequestHandler implements RequestHandlerInterface
     public function process(): void
     {
         $this->response = $this->handle($this->request);
+        header('Content-Type: '.$this->response->getContentType());
+        echo $this->response->getBody();
     }
 
 }

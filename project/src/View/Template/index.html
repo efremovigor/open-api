@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script>
+        $(function () {
+            $('#submit_login').on('click',function () {
+            	$.post( "/api/login", { login: $('#login').val(), password: $('#password').val() } )
+					.done(function( data ) {
+                    alert( "Data Loaded: " + data );
+                });
+            })
+        });
+	</script>
+	<meta charset="UTF-8">
+	<title>%%title%%</title>
+</head>
+<h2>%%title%%</h2>
+<body>
+	<input id="login" value="%%login_value%%" type="email" placeholder="email@email.com">
+	<input id="password" type="password" title="password">
+	<input id="submit_login" value="login" type="button" title="submit">
+</body>
+</html>

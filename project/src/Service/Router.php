@@ -2,6 +2,7 @@
 
 namespace Service;
 
+use Core\App;
 use Core\Service\YmlParser;
 use Service\Entity\Routing\Path;
 use Service\Entity\Routing\RoutingCollection;
@@ -38,15 +39,15 @@ class Router
      */
     public function __construct(YmlParser $parser)
     {
-        $this->requestUri = $_SERVER['REQUEST_URI'];
-        $this->routingCollection = $parser->packPath(\Core\App::getConfDir() . '/routing.yml', RoutingCollection::class);
+        $this->requestUri        = $_SERVER['REQUEST_URI'];
+        $this->routingCollection = $parser->packPath(App::getConfDir() . '/routing.yml', RoutingCollection::class);
     }
 
     /**
      * @return null|Path
      * @throws \Exception
      */
-    public function getPath(): ?Path
+    public function currentPath(): ?Path
     {
         if ($this->selectPath === null) {
             $analyzer = new UrlAnalyzer();
@@ -57,6 +58,16 @@ class Router
                 }
             }
         }
+
         return $this->selectPath;
+    }
+
+    /**
+     * @param string $key
+     * @return mixed|null
+     */
+    public function getPath(string $key)
+    {
+        return $this->routingCollection->get($key);
     }
 }

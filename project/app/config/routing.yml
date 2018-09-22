@@ -1,55 +1,59 @@
 index:
-  path: /
-  controller: /Controller/Class
-  action: actionName
-  methods:  [GET]
-index1:
-  path: /name
-  controller: /Controller/Class
-  action: actionName
-  methods:  [GET]
-index2:
-  path: /name/{id}
-  controller: /Controller/Class
-  action: actionName
-  methods:  [GET,DELETE]
-  parameters:
-    id:
-      value: \d+
-      type: regexp
-index3:
-  path: /users/{;id}/product/{;name}
-  controller: /Controller/Class
-  action: actionName
+  route: /
+  controller: \Controller\IndexController
+  action: indexAction
   methods:  [GET,POST]
-  parameters:
-    id:
-      value: \d+
-      type: regexp
-index4:
-  path: /name/locale/{name}
-  controller: /Controller/Class
-  action: actionName
+login:
+  route: /api/login
+  controller: \Controller\UserController
+  action: loginAction
+  methods:  [POST]
+  json:  true
+profile:
+  route: /profile
+  controller: \Controller\UserController
+  action: profileAction
   methods:  [GET]
-  parameters:
-    name:
-      value: html|rss
-      type: choice
-get_user_by_username:
-  path: /2.0/users/{username}/articles/{_locale}/{year}/{title}
-  controller: /Controller/Class
-  action: actionName
-  methods:  [GET]
-  defaults: {
-    _locale: en
-  }
-  parameters:
-    _locale:
-      value: en|fr
-      type: choice
-    year:
-      value: \d+
-      type: regexp
-    _format:
-      value: html|rss
-      type: choice
+get_gift:
+  route: /gift
+  controller: \Controller\UserController
+  action: profileAction
+  methods:  [POST]
+
+#todo::Test route,not work
+#index3:
+#  route: /users/{;id}/product
+#  controller: /Controller/Class
+#  action: actionName
+#  methods:  [GET,POST]
+#  patternParams:
+#    id:
+#      expr: \d+
+#      type: regexp
+#index4:
+#  route: /name/locale/{name}
+#  controller: /Controller/Class
+#  action: actionName
+#  methods:  [GET]
+#  patternParams:
+#    name:
+#      expr: html|rss
+#      type: choice
+#get_user_by_username:
+#  route: /2.0/users/{username}/articles/{_locale}/{year}/{title}
+#  controller: /Controller/Class
+#  action: actionName
+#  methods:  [GET]
+#  defaults: {
+#    _locale: en
+#  }
+#  patternParams:
+#    _locale:
+#      expr: en|fr
+#      type: choice
+#    year:
+#      expr: \d+
+#      type: regexp
+#    _format:
+#      expr: html|rss
+#      type: choice

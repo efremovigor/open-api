@@ -32,7 +32,7 @@ class UrlAnalyzer
      */
     public function getMatch(Path $path): string
     {
-        $parts = explode('/', $path->getPath());
+        $parts = explode('/', $path->getRoute());
         $matches = [];
         foreach ($parts as $part) {
             if (preg_match(self::MATCH_ANY_ROUTE_VAR, $part)) {
@@ -41,17 +41,17 @@ class UrlAnalyzer
                     $matches[] = $paramName . '=' . self::CLEAR_STRING . '(,' . self::CLEAR_STRING . ')*';
                     continue;
                 }
-                if ($path->getParameters()->has($paramName)) {
+                if ($path->getPatternParams()->has($paramName)) {
                     /**
                      * @var $parameter Parameter
                      */
-                    $parameter = $path->getParameters()->get($paramName);
+                    $parameter = $path->getPatternParams()->get($paramName);
                     switch ($parameter->getType()) {
                         case 'choice':
-                            $matches[] = '(?P<' . $paramName . '>(' . $parameter->getValue() . '))';
+                            $matches[] = '(?P<' . $paramName . '>(' . $parameter->getExpr() . '))';
                             continue 2;
                         case 'regexp':
-                            $matches[] = '(?P<' . $paramName . '>' . $parameter->getValue() . ')';
+                            $matches[] = '(?P<' . $paramName . '>' . $parameter->getExpr() . ')';
                             continue 2;
                     }
                 }

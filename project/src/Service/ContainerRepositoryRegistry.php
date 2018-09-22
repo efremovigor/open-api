@@ -23,7 +23,7 @@ class ContainerRepositoryRegistry extends AbstractRegistry
 	protected function getServices()
 	{
 		return [
-			RepositoryConst::USER  => new ContainerItem(RepositoryConst::USER, [ServiceConst::ORM_CONNECTION, CoreServiceConst::SERIALIZER]),
+            RepositoryConst::USER  => new ContainerItem(RepositoryConst::USER, [ServiceConst::ORM_CONNECTION, CoreServiceConst::SERIALIZER]),
 			RepositoryConst::REDIS => new ContainerItem(RepositoryConst::USER, [ServiceConst::REDIS_CONNECTION, CoreServiceConst::SERIALIZER]),
 		];
 	}

@@ -28,6 +28,11 @@ class Kernel
         return __DIR__ . '/../..';
     }
 
+    public static function getTemplateDir():string
+    {
+        return __DIR__ . '/../View/Template';
+    }
+
     /**
      * @return string
      */
