@@ -22,22 +22,28 @@ class UserController extends AbstractController
      */
     public function loginAction()
     {
-        /**
-         * @var $form Login
-         */
-        $form = $this->getSerializer()->normalize($_POST, Login::class);
-        if (!$form->isValid()) {
-            $this->setRedirectRoute('index');
-            return new ResponseJson(['success' => false, 'error' => 'invalid credential']);
+        try{
+            /**
+             * @var $form Login
+             */
+            $form = $this->getSerializer()->normalize($_POST, Login::class);
+            if (!$form->isValid()) {
+                $this->setRedirectRoute('index');
+                $data = ['success' => false, 'error' => 'invalid credential'];
+            }else{
+                $user = $this->getUserRepository()->getByCred($form);
+                if ($user instanceof User) {
+                    $this->getRedisRepository()->initSession($user);
+                    $data = ['success' => true, 'error' => ''];
+                } else {
+                    $data = ['success' => false, 'error' => 'invalid credential'];
+                }
+            }
+        }catch (\Throwable $exception){
+            $data = ['success' => false, 'error' => 'service is down'];
         }
 
-        $user = $this->getUserRepository()->getByCred($form);
-        if ($user instanceof User) {
-            $this->getRedisRepository()->initSession($user);
-            return new ResponseJson(['success' => true, 'error' => '']);
-        } else {
-            return new ResponseJson(['success' => false, 'error' => 'invalid credential']);
-        }
+        return new ResponseJson($this->getSerializer()->serialize($data));
     }
 
     public function profileAction()

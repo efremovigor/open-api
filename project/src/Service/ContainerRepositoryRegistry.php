@@ -24,7 +24,7 @@ class ContainerRepositoryRegistry extends AbstractRegistry
 	{
 		return [
             RepositoryConst::USER  => new ContainerItem(RepositoryConst::USER, [ServiceConst::ORM_CONNECTION, CoreServiceConst::SERIALIZER]),
-			RepositoryConst::REDIS => new ContainerItem(RepositoryConst::USER, [ServiceConst::REDIS_CONNECTION, CoreServiceConst::SERIALIZER]),
+			RepositoryConst::REDIS => new ContainerItem(RepositoryConst::REDIS, [ServiceConst::REDIS_CONNECTION, CoreServiceConst::SERIALIZER]),
 		];
 	}
 

@@ -7,7 +7,9 @@
             $('#submit_login').on('click',function () {
             	$.post( "/api/login", { login: $('#login').val(), password: $('#password').val() } )
 					.done(function( data ) {
-                    alert( "Data Loaded: " + data );
+                    if(data.success == true){
+                        window.location.replace("http://project.ru/profile");
+					}
                 });
             })
         });
