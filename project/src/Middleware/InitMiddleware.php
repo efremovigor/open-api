@@ -12,18 +12,17 @@ namespace Middleware;
 use Core\Service\CoreServiceConst;
 use Core\Service\Middleware\AbstractMiddleware;
 use Psr\Log\LogLevel;
-use Service\ServiceConst;
 
 class InitMiddleware extends AbstractMiddleware
 {
 
-    /**
-     * @throws \Psr\Container\ContainerExceptionInterface
-     */
+	/**
+	 * @throws \Psr\Container\ContainerExceptionInterface
+	 * @throws \Exception
+	 */
     protected function before(): void
     {
         $this->initConf();
-        $this->container->get(ServiceConst::CACHE_MAN)->getRedis();
     }
 
     public function getName(): string
@@ -31,10 +30,11 @@ class InitMiddleware extends AbstractMiddleware
         return 'init';
     }
 
-    /**
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     */
+	/**
+	 * @throws \Psr\Container\ContainerExceptionInterface
+	 * @throws \Psr\Container\NotFoundExceptionInterface
+	 * @throws \Exception
+	 */
     private function initConf(): void
     {
 

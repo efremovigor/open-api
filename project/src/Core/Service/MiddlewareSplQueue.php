@@ -9,6 +9,7 @@
 namespace Core\Service;
 
 
+use Core\Service\Middleware\AbstractMiddleware;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\MiddlewareInterface;
 
@@ -88,7 +89,7 @@ class MiddlewareSplQueue extends \SplQueue
         return new $name($this, $this->container);
     }
 
-    public function current(): ?MiddlewareInterface
+    public function current(): ?AbstractMiddleware
     {
         return parent::current();
     }

@@ -29,9 +29,10 @@ class ProfilerMiddleware extends AbstractMiddleware
         }
     }
 
-    /**
-     * @throws \Psr\Container\ContainerExceptionInterface
-     */
+	/**
+	 * @throws \Psr\Container\ContainerExceptionInterface
+	 * @throws \Exception
+	 */
     protected function after(): void
     {
         if($this->getConf()->get()->getEnvConf()->isProfiling()){

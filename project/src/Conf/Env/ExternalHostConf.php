@@ -13,43 +13,44 @@ use Core\Service\Entity\PropertyAccessInterface;
 class ExternalHostConf implements PropertyAccessInterface
 {
 
-    private $server;
-    private $url;
+	private $server;
 
-    public function getProperties(): array
-    {
-        return ['server', 'url'];
-    }
+	private $url;
 
-    /**
-     * @return mixed
-     */
-    public function getServer()
-    {
-        return $this->server;
-    }
+	public function getProperties(): array
+	{
+		return ['server', 'url'];
+	}
 
-    /**
-     * @param mixed $server
-     */
-    public function setServer($server): void
-    {
-        $this->server = $server;
-    }
+	/**
+	 * @return mixed
+	 */
+	public function getServer()
+	{
+		return $this->server;
+	}
 
-    /**
-     * @return mixed
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
+	/**
+	 * @param mixed $server
+	 */
+	public function setServer($server): void
+	{
+		$this->server = $server;
+	}
 
-    /**
-     * @param mixed $url
-     */
-    public function setUrl($url): void
-    {
-        $this->url = $url;
-    }
+	/**
+	 * @return mixed
+	 */
+	public function getUrl()
+	{
+		return $this->url;
+	}
+
+	/**
+	 * @param mixed $url
+	 */
+	public function setUrl($url): void
+	{
+		$this->url = $url;
+	}
 }

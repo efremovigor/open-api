@@ -11,7 +11,7 @@ namespace Conf;
 
 use Conf\Env\EnvConfInterface;
 
-class Conf
+class MainConf
 {
     /**
      * @var EnvConfInterface
@@ -23,7 +23,7 @@ class Conf
     private $components;
 
     /**
-     * @return EnvConf
+     * @return EnvConfInterface
      */
     public function getEnvConf(): EnvConfInterface
     {

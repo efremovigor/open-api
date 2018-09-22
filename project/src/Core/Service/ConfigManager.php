@@ -10,8 +10,8 @@ namespace Core\Service;
 
 
 use Conf\Components;
+use Conf\Env\BaseConf;
 use Conf\Env\ExternalHostConf;
-use Conf\EnvConf;
 use Core\App;
 use Core\Service\Socket\SocketRequest;
 
@@ -34,7 +34,7 @@ class ConfigManager
     private $ymlParser;
 
     /**
-     * @var  \Conf\Conf
+     * @var  \Conf\MainConf
      */
     private $conf;
 
@@ -64,13 +64,13 @@ class ConfigManager
         $this->env = $environment;
         $this->socket = $socket;
         $this->ymlParser = $ymlParser;
-        $this->conf = new \Conf\Conf();
+        $this->conf = new \Conf\MainConf();
 
         $this->init();
     }
 
 
-    public function get():  \Conf\Conf
+    public function get():  \Conf\MainConf
     {
         return $this->conf;
     }
@@ -86,7 +86,7 @@ class ConfigManager
                 if (!\file_exists($this->getParametersPath())) {
                     $this->createFileParameters();
                 }
-                $this->conf->setEnvConf($this->ymlParser->packPath($this->getConfPath(), EnvConf::class));
+                $this->conf->setEnvConf($this->ymlParser->packPath($this->getConfPath(), BaseConf::class));
                 break;
             case self::SELF_MODE:
                 $this->conf->setEnvConf($this->env->getConf());

@@ -16,9 +16,10 @@ use Service\ServiceConst;
 class RouterMiddleware extends AbstractMiddleware
 {
 
-    /**
-     * @throws \Psr\Container\ContainerExceptionInterface
-     */
+	/**
+	 * @throws \Psr\Container\ContainerExceptionInterface
+	 * @throws \Exception
+	 */
     protected function before(): void
     {
         $this->getLogger()->log(LogLevel::INFO,$this->container->get(ServiceConst::ROUTER)->getPath());

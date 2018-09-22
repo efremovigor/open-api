@@ -13,6 +13,7 @@ use Core\Response;
 use Core\Service\MiddlewareSplQueue;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LogLevel;
@@ -51,11 +52,15 @@ abstract class AbstractMiddleware implements MiddlewareInterface
      */
     private $logger;
 
-    /**
-     * AbstractMiddleware constructor.
-     * @param MiddlewareSplQueue $middlewareCollection
-     * @param ContainerInterface $container
-     */
+	/**
+	 * AbstractMiddleware constructor.
+	 *
+	 * @param MiddlewareSplQueue $middlewareCollection
+	 * @param ContainerInterface $container
+	 *
+	 * @throws \Psr\Container\ContainerExceptionInterface
+	 * @throws \Psr\Container\NotFoundExceptionInterface
+	 */
     public function __construct(MiddlewareSplQueue $middlewareCollection, ContainerInterface $container)
     {
         $this->middlewareCollection = $middlewareCollection;

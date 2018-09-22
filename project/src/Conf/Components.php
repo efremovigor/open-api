@@ -11,6 +11,13 @@ namespace Conf;
 
 use Core\Container\ContainerItem;
 use Core\Service\CoreServiceConst;
+use Middleware\ControllerMiddleware;
+use Middleware\DebugMiddleware;
+use Middleware\InitMiddleware;
+use Middleware\ProfilerMiddleware;
+use Middleware\ResponseMiddleware;
+use Middleware\RouterMiddleware;
+use Middleware\TerminateMiddleware;
 use Service\ServiceConst;
 
 class Components implements ComponentsInterface
@@ -19,13 +26,13 @@ class Components implements ComponentsInterface
     public function getMiddlewares(): array
     {
         return [
-            \Middleware\ProfilerMiddleware::class,
-            \Middleware\InitMiddleware::class,
-            \Middleware\DebugMiddleware::class,
-            \Middleware\RouterMiddleware::class,
-            \Middleware\ControllerMiddleware::class,
-            \Middleware\ResponseMiddleware::class,
-            \Middleware\TerminateMiddleware::class,
+            ProfilerMiddleware::class,
+            InitMiddleware::class,
+            DebugMiddleware::class,
+            RouterMiddleware::class,
+            ControllerMiddleware::class,
+            ResponseMiddleware::class,
+            TerminateMiddleware::class,
         ];
     }
 

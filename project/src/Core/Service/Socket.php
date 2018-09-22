@@ -23,6 +23,7 @@ class Socket
     public function call(SocketRequest $request): SocketResponse
     {
         //todo tothink - every call will create a new socket??
+	    //todo::rewrite
         $connect = stream_socket_client($request->getHost() . ':' . $request->getPort(), $errno, $errstr);
         stream_set_timeout($connect, $request->getTimeout());
         if (false === $connect) {

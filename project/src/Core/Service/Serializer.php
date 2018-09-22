@@ -2,6 +2,7 @@
 
 namespace Core\Service;
 
+use Core\Service\Entity\CollectionKeyInterface;
 use Core\Service\Entity\ContainsCollectionInterface;
 use Core\Service\Entity\PropertyAccessInterface;
 
