@@ -14,7 +14,7 @@ class Dev extends BaseConf
 
     public function isProfiling(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,7 +22,7 @@ class Dev extends BaseConf
      */
     public function getSqlDsn(): string
     {
-        return 'mysql:dbname=testdb;host=127.0.0.1';
+        return 'mysql:dbname=praga;host=containerhost;port=3306';
     }
 
     /**
@@ -30,23 +30,24 @@ class Dev extends BaseConf
      */
     public function getSqlUser(): string
     {
-        return 'dbuser';
+        return 'root';
     }
 
     /**
      * @return mixed
      */
-    public function getSqlPassword(): string
+    public function getSqlPassword(): ?string
     {
-        return 'dbpass';
+        return null;
     }
+
 
     /**
      * @return mixed
      */
     public function getRedisHost(): string
     {
-        return $this->redisHost;
+        return 'containerhost';
     }
 
     /**
@@ -54,15 +55,14 @@ class Dev extends BaseConf
      */
     public function getRedisPort(): string
     {
-        return $this->redisPort;
+        return '6379';
     }
 
     /**
      * @return mixed
      */
-    public function getRedisPassword(): string
+    public function getRedisPassword(): ?string
     {
-        return $this->redisPassword;
+        return null;
     }
-
 }
