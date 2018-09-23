@@ -10,6 +10,7 @@ namespace Service;
 
 
 use Core\Service\ConfigManager;
+use Predis\Client;
 
 class RedisConnection
 {
@@ -28,15 +29,15 @@ class RedisConnection
 	{
 		$this->configManager = $configManager;
 		$envConf = $this->configManager->get()->getEnvConf();
-		$this->connection = new \Redis();
-		$this->connection->connect($envConf->getRedisHost(),$envConf->getRedisPort());
-		$this->connection->auth($envConf->getRedisPassword());
+        $this->connection = new Client([
+            'scheme' => 'tcp',
+            'host'   => $envConf->getRedisHost(),
+            'port'   => $envConf->getRedisPort(),
+        ]);
 	}
 
-	/**
-	 * @return \Redis
-	 */
-	public function getConnection(): \Redis
+
+	public function getConnection(): Client
 	{
 		return $this->connection;
 	}

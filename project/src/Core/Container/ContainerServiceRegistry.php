@@ -44,11 +44,11 @@ class ContainerServiceRegistry extends AbstractRegistry
         /**
          * Регистрируем сервисы ядра
          */
-        $this->services = $this->getCoreServices();
+        static::$services = $this->getCoreServices();
         /**
          * Регистрируем остальные сервисы
          */
-        $this->services = array_merge($this->services,$this->getConfigManager()->get()->getComponents()->getServices());
+        static::$services = array_merge(static::$services,$this->getConfigManager()->get()->getComponents()->getServices());
     }
 
     /**

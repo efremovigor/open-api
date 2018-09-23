@@ -20,11 +20,11 @@ class UserBuilder
 	 */
 	public function getQueryCred(string $login,string $password): string
 	{
-		return sprintf('SELECT ... FROM user u WHERE u.login = "%s" AND u.password = "%s"',$login, $password);
+		return sprintf('SELECT id , name , surname , login FROM user u WHERE u.login = "%s" AND u.password = "%s"',$login, $password);
 	}
 
 	public function getById(int $id): string
 	{
-		return sprintf('SELECT ... FROM user u WHERE u.id = "%d"',$id);
+		return sprintf('SELECT id , name , surname , login FROM user u WHERE u.id = "%d"',$id);
 	}
 }

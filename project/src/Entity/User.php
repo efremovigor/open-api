@@ -11,15 +11,17 @@ namespace Entity;
 
 use Core\Service\Entity\PropertyAccessInterface;
 
+/**
+ * Class User
+ * @package Entity
+ */
 class User implements PropertyAccessInterface
 {
     protected $id;
 	protected $login;
 	protected $name;
 	protected $surname;
-	protected $cash;
-	protected $bonusPoints;
-	protected $items;
+	protected $gifts;
 
     /**
      * @return array
@@ -35,6 +37,11 @@ class User implements PropertyAccessInterface
             'bonusPoints',
             'items',
         ];
+    }
+
+    public function __construct()
+    {
+        $this->gifts = new GiftList();
     }
 
     /**
@@ -99,54 +106,6 @@ class User implements PropertyAccessInterface
     public function setSurname($surname): void
     {
         $this->surname = $surname;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCash()
-    {
-        return $this->cash;
-    }
-
-    /**
-     * @param mixed $cash
-     */
-    public function setCash($cash): void
-    {
-        $this->cash = $cash;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBonusPoints()
-    {
-        return $this->bonusPoints;
-    }
-
-    /**
-     * @param mixed $bonusPoints
-     */
-    public function setBonusPoints($bonusPoints): void
-    {
-        $this->bonusPoints = $bonusPoints;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getItems()
-    {
-        return $this->items;
-    }
-
-    /**
-     * @param mixed $items
-     */
-    public function setItems($items): void
-    {
-        $this->items = $items;
     }
 
 

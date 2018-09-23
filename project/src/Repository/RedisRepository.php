@@ -10,6 +10,8 @@ namespace Repository;
 
 
 use Core\Service\Serializer;
+use Entity\GiftBalanceInfo;
+use Entity\GiftInterface;
 use Entity\User;
 use Service\RedisConnection;
 
@@ -33,6 +35,7 @@ class RedisRepository
     }
 
     /**
+     * Получение пользователя по сессии
      * @param string $sessionKey
      *
      * @return \Entity\User|null
@@ -44,6 +47,7 @@ class RedisRepository
     }
 
     /**
+     * Инициализация сессии
      * @param User $user
      * @return void
      * @throws \Exception
@@ -56,5 +60,25 @@ class RedisRepository
     private function getSessionKey(string $key): string
     {
         return 'user_session_' . $key;
+    }
+
+    /**
+     * Получение баланса подарков
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getGiftInfo(): GiftBalanceInfo
+    {
+        return $this->serializer->normalize($this->redisConnection->getConnection()->get('gift_balance'), GiftBalanceInfo::class);
+    }
+
+    /**
+     * Обновление баланса подарков
+     * @param GiftBalanceInfo $info
+     * @throws \Exception
+     */
+    public function updateGiftInfo(GiftBalanceInfo $info)
+    {
+        $this->redisConnection->getConnection()->set('gift_balance', $this->serializer->jsonSignificant($info));
     }
 }

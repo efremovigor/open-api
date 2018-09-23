@@ -28,7 +28,7 @@ class UserRepository extends AbstractOrmRepository
      */
 	public function getByCred(Login $form): ?User
 	{
-		$query = $this->newBuilder()->getQueryCred($form->getLogin(), $form->getPassword());
+		$query = $this->newBuilder()->getQueryCred($form->getLogin(), md5($form->getPassword()));
 		return $this->serializer->normalize($this->fetchOne($query), User::class);
 	}
 

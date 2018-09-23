@@ -17,14 +17,14 @@ abstract class AbstractRegistry implements ContainerInterface
 	/**
 	 * @var ContainerItem[]
 	 */
-	protected $services;
+	protected static $services;
 
 	/**
 	 * @return array
 	 */
 	protected function getList(): array
 	{
-		return $this->services;
+		return static::$services;
 	}
 
     /**

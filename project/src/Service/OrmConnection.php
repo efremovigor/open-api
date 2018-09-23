@@ -28,7 +28,7 @@ class OrmConnection
 	public function __construct(ConfigManager $configManager)
 	{
 		$config = $configManager->get()->getEnvConf();
-		$this->connection = new PDO($config->getSqlDsn(), $config->getSqlPassword(), $config->getSqlUser());
+		$this->connection = new PDO($config->getSqlDsn(),$config->getSqlUser(),$config->getSqlPassword());
 		$this->configManager = $configManager;
 	}
 

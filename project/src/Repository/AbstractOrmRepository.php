@@ -15,41 +15,47 @@ use Service\OrmConnection;
 abstract class AbstractOrmRepository
 {
 
-	/**
-	 * @var \Core\Service\Serializer
-	 */
-	protected $serializer;
+    /**
+     * @var \Core\Service\Serializer
+     */
+    protected $serializer;
 
-	/**
-	 * @var \Service\OrmConnection
-	 */
-	private $connectionOrmService;
+    /**
+     * @var \Service\OrmConnection
+     */
+    private $connectionOrmService;
 
 
-	/**
-	 * AbstractOrmRepository constructor.
-	 *
-	 * @param \Service\OrmConnection   $connectionOrmService
-	 * @param \Core\Service\Serializer $serializer
-	 */
-	public function __construct(OrmConnection $connectionOrmService, Serializer $serializer)
-	{
-		$this->connectionOrmService = $connectionOrmService;
-		$this->serializer = $serializer;
-	}
+    /**
+     * AbstractOrmRepository constructor.
+     *
+     * @param \Service\OrmConnection $connectionOrmService
+     * @param \Core\Service\Serializer $serializer
+     */
+    public function __construct(OrmConnection $connectionOrmService, Serializer $serializer)
+    {
+        $this->connectionOrmService = $connectionOrmService;
+        $this->serializer           = $serializer;
+    }
 
-	/**
-	 * @param string $query
-	 *
-	 * @return array|null
-	 */
-	public function fetchOne(string $query): ?array
-	{
-		return $this->connectionOrmService->getConnection()->query($query)->fetch();
-	}
+    /**
+     * @param string $query
+     *
+     * @return array|null
+     */
+    public function fetchOne(string $query)
+    {
+        return $this->connectionOrmService->getConnection()->query($query)->fetch();
+    }
 
-	public function fetchAll(string $query): array
-	{
-		return $this->connectionOrmService->getConnection()->query($query)->fetchAll();
-	}
+    public function fetchAll(string $query): array
+    {
+        return $this->connectionOrmService->getConnection()->query($query)->fetchAll();
+    }
+
+    public function update(string $query)
+    {
+        $this->connectionOrmService->getConnection()->query($query)->execute($query);
+    }
+
 }

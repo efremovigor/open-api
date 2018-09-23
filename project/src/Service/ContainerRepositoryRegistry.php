@@ -30,6 +30,7 @@ class ContainerRepositoryRegistry extends AbstractRegistry
 
 	public function __construct(ContainerServiceRegistry $container)
 	{
-		$this->services = $this->getServices();
+
+        static::$services = array_merge(static::$services,$this->getServices());
 	}
 }

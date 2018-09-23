@@ -48,6 +48,12 @@ class Components implements ComponentsInterface
             ServiceConst::ORM_CONNECTION   => new ContainerItem(ServiceConst::ORM_CONNECTION, [CoreServiceConst::CONF_MANAGER]),
             ServiceConst::REDIS_CONNECTION => new ContainerItem(ServiceConst::REDIS_CONNECTION, [CoreServiceConst::CONF_MANAGER]),
             ServiceConst::TEMPLATER        => new ContainerItem(ServiceConst::TEMPLATER),
+            ServiceConst::SESSION          => new ContainerItem(ServiceConst::SESSION),
+
+            ServiceConst::GIFT_SERVICE     => new ContainerItem(ServiceConst::GIFT_SERVICE, [CoreServiceConst::CONTAINER]),
+            ServiceConst::APP_GIFT_SENDER  => new ContainerItem(ServiceConst::APP_GIFT_SENDER),
+            ServiceConst::BANK_GIFT_SENDER => new ContainerItem(ServiceConst::BANK_GIFT_SENDER),
+            ServiceConst::MAIL_GIFT_SENDER => new ContainerItem(ServiceConst::MAIL_GIFT_SENDER),
         ];
     }
 }

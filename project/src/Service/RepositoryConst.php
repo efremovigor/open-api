@@ -9,11 +9,13 @@
 namespace Service;
 
 use Core\Container\ContainerRepositoryRegistry;
+use Repository\GiftRepository;
 use Repository\RedisRepository;
 use Repository\UserRepository;
 
 final class RepositoryConst
 {
-    public const USER = UserRepository::class;
+    public const USER  = UserRepository::class;
     public const REDIS = RedisRepository::class;
+    public const GIFT  = GiftRepository::class;
 }
