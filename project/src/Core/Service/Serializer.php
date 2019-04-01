@@ -5,10 +5,11 @@ namespace Core\Service;
 use Core\Service\Entity\CollectionKeyInterface;
 use Core\Service\Entity\ContainsCollectionInterface;
 use Core\Service\Entity\PropertyAccessInterface;
-
+use Core\Service\Entity\HasJsonPropertiesInterface;
+use Core\Service\Entity\RenameMappingInterface;
+use stdClass;
 
 /**
- * todo tothink is really need so complex and magic class
  * Class Serializer
  * @package Helpers
  */
@@ -16,16 +17,21 @@ class Serializer
 {
 
     /**
-     * nullable - Обнулять параметрами из источника
-     * rewritable - Перезаписывать параметрами из источника
-     * addable - Добавлять параметрами источника, если субьект имеет, что-то у себя
-     * camel_force - Превращает ключи в camelCase
+     * NULLABLE - Обнулять параметрами из источника
+     * REWRITABLE - Перезаписывать параметрами из источника
+     * ADDABLE - Добавлять параметрами источника, если субьект имеет, что-то у себя
+     * CAMEL_FORCE - Превращает ключи в camelCase
+     * ONLY_FILLED - Удаление null полей
+     * ARRAY_WITHOUT_JSON - служебный ключ, который свидетельствует что внутри сущности может быть json и его нужно упаковать слив в один json
+     * CLEAR_INDEX_KEY - очищает ключи-индексы из листов, когда преобразуешь в массив/json
      */
-    public const ADDABLE = 0b0000001;
-    public const REWRITABLE = 0b0000010;
-    public const NULLABLE = 0b0000100;
-    public const CAMEL_FORCE = 0b0001000;
-    public const SERIALIZE_FILLED = 0b0010000;
+    public const  ADDABLE            = 0b00000001;
+    public const  REWRITABLE         = 0b00000010;
+    public const  NULLABLE           = 0b00000100;
+    public const  CAMEL_FORCE        = 0b00001000;
+    public const  ONLY_FILLED        = 0b00010000;
+    private const ARRAY_WITHOUT_JSON = 0b00100000;
+    public const  CLEAR_INDEX_KEY    = 0b01000000;
 
     /**
      * Десериализует данные
@@ -33,13 +39,22 @@ class Serializer
      * @param       $subject
      * @param int $flags
      * @return mixed
-     * @throws \Exception
      */
     public function normalize($source, $subject = null, int $flags = self::ADDABLE)
     {
         switch (true) {
             case \is_object($subject):
                 switch (true) {
+                    /** array -> stdClass */
+                    case $subject instanceOf StdClass && is_array($source):
+                        $this->arrayToStdClass($source, $subject, $flags);
+                        break;
+                    /** stdClass -> array -> object */
+                    case $source instanceOf StdClass:
+                        $tmpArray = [];
+                        $this->stdClassToArray($source, $tmpArray, $flags);
+                        $this->normalize($tmpArray, $subject, $flags);
+                        break;
                     /** object -> object{PropertyAccessInterface} */
                     case $source instanceOf PropertyAccessInterface:
                         $this->objectToObject($source, $subject, $flags);
@@ -69,19 +84,29 @@ class Serializer
             case \is_string($subject):
                 if (class_exists($subject)) {
                     $subject = $this->normalize($source, new $subject(), $flags);
+                } else {
+                    $subject = $source;
                 }
                 break;
             case \is_array($subject) || $subject === null:
                 switch (true) {
+                    /** stdClass -> array */
+                    case \is_object($source) && $source instanceOf StdClass:
+                        $this->stdClassToArray($source, $subject, $flags);
+                        break;
                     /**
                      * Если обьект преобразования коллекция
                      * Подменяем сорс внутренними элементами
                      */
                     case  \is_object($source) && $source instanceof ContainsCollectionInterface:
-                        $subject = $this->normalize($source->getElements(), $subject, $flags);
+                        if ($subject === null) {
+                            $subject = [];
+                        }
+                        $this->collectionToArray($source, $subject, $flags);
                         break;
                     /** array -> array */
                     case \is_array($source):
+                        $subject = [];
                         foreach ($source as $key => $element) {
                             /** Если элемент массива - массив, и он определен в субьекте - то лезем внутрь */
                             if (\is_array($element) && isset($subject[$key])) {
@@ -106,8 +131,12 @@ class Serializer
                     case !\is_object($source) && $this->isJson($source):
                         $subject = json_decode($source, true);
                         break;
+                    default:
+                        $subject = $source;
                 }
                 break;
+            default:
+                $subject = $source;
         }
 
 
@@ -119,29 +148,32 @@ class Serializer
      * @param string $type
      * @param int $flags
      * @return mixed
-     * @throws \Exception
      */
     public function serialize($source, string $type = 'json', int $flags = 0)
     {
         switch (true) {
+            case \is_string($source) && $this->isJson($source):
+                return $source;
             /**
              * превращаем в массив, и проваливаемся в следующий кейс.
              */
-            case \is_object(
-                    $source
-                ) && ($source instanceOf PropertyAccessInterface || $source instanceOf ContainsCollectionInterface):
-                $source = $this->normalize($source);
+            case \is_object($source) && ($source instanceOf PropertyAccessInterface || $source instanceOf ContainsCollectionInterface):
+                $source = $this->normalize($source, null, $flags | self::ARRAY_WITHOUT_JSON);
             case \is_array($source):
                 if ($this->isSerializeFilled($flags)) {
-                    $source = $this->arrayFilterRecursive($source, function ($el) {
-                        return $el !== null;
-                    });
+                    $source = $this->arrayFilterRecursive(
+                        $source,
+                        function($el)
+                        {
+                            return $el !== null;
+                        }
+                    );
                     if (count($source) === 0) {
                         return null;
                     }
                 }
                 if ($type === 'json') {
-                    $source = json_encode($source, true);
+                    $source = \json_encode($source, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
                 }
                 break;
         }
@@ -153,9 +185,8 @@ class Serializer
      * @param $source
      * @param int $flags
      * @return mixed
-     * @throws \Exception
      */
-    public function jsonSignificant($source, int $flags = Serializer::SERIALIZE_FILLED)
+    public function jsonSignificant($source, int $flags = Serializer::ONLY_FILLED)
     {
         return $this->serialize($source, 'json', $flags);
     }
@@ -164,7 +195,6 @@ class Serializer
      * Циклом нормализует данные в обьекте(кеп)
      * @param array $source
      * @param ContainsCollectionInterface $subject
-     * @throws \Exception
      * @param $flags
      */
     private function arrayToCollectionObject(array $source, ContainsCollectionInterface $subject, $flags): void
@@ -180,18 +210,21 @@ class Serializer
      * @param mixed $subject
      * @param int $flags
      * @return void
-     * @throws \Exception
      */
     private function objectToObject(PropertyAccessInterface $source, &$subject, int $flags = self::ADDABLE): void
     {
         foreach ($source->getProperties() as $property) {
-            if ($this->isCamelForce($flags)) {
-                $property = $this->toCamel($property);
+            if ($source instanceof RenameMappingInterface && isset($source->getRenameMapping()[$property])) {
+                $property = $source->getRenameMapping()[$property];
+            } else {
+                if ($this->isCamelForce($flags)) {
+                    $property = $this->toCamel($property);
+                }
             }
-            $setMethod = $this->setMethod($property);
-            $addMethod = $this->addMethod($property);
-            $sourceGetter = $this->getExistingGetter($source, $property);
-            $subjectGetter = $this->getExistingGetter($subject, $property, true);
+            $setMethod     = $this->setMethod($property);
+            $addMethod     = $this->addMethod($property);
+            $sourceGetter  = $this->getExistingGetter($source, $property);
+            $subjectGetter = $this->getExistingGetter($subject, $property);
 
             /**
              * Добавляет элементы если свойство в объекте - это массив
@@ -202,7 +235,7 @@ class Serializer
                     continue;
                 }
 
-                foreach ((array) $source->$sourceGetter() as $subValue) {
+                foreach ((array)$source->$sourceGetter() as $subValue) {
                     $subject->$addMethod($subValue);
                 }
                 continue;
@@ -238,23 +271,22 @@ class Serializer
      * @param array $source
      * @param mixed $subject
      * @param int $flags
-     * @throws \Exception
      */
     private function arrayToObject(array $source, &$subject, int $flags = self::ADDABLE): void
     {
         foreach ($source as $key => $value) {
-            if ($this->isCamelForce($flags)) {
-                $key = $this->toCamel($key);
-            }
-            $setMethod = $this->setMethod($key);
-            $addMethod = $this->addMethod($key);
-            $subjectGetter = $this->getExistingGetter($subject, $key, true);
+
+            $currentKey = $this->isCamelForce($flags) ? $this->toCamel($key) : $key;
+
+            $setMethod     = $this->setMethod($currentKey);
+            $addMethod     = $this->addMethod($currentKey);
+            $subjectGetter = $this->getExistingGetter($subject, $currentKey);
 
             /**
              * Если элемент сорса массив , а элемент того уровня коллекция - упаковываем в коллекцию
              */
             if (\is_array($value) && $subjectGetter !== null && $subject->$subjectGetter() instanceof ContainsCollectionInterface) {
-                foreach ((array) $value as $subKey => $subValue) {
+                foreach ((array)$value as $subKey => $subValue) {
                     $subject->$subjectGetter()->set($subKey, $this->normalize($subValue, $subject->$subjectGetter()->getClass(), $flags));
                 }
                 continue;
@@ -271,15 +303,17 @@ class Serializer
                 }
                 continue;
             }
+
             /**
-             * Рекурсивно вызывается,если св-во subject является обьектом
+             * Если поле определено как json -> object | array -> object | object -> object
              */
-            if ((\is_array($value) || \is_object($value)) && $subjectGetter !== null &&
-                \is_object($subject->$subjectGetter())
-            ) {
-                $this->normalize($value, $subject->$subjectGetter($value), $flags);
-                continue;
+            if ($subjectGetter !== null && \is_object($subject->$subjectGetter())) {
+                if (\is_array($value) || \is_object($value) || ($this->isJsonProperty($subject, $key) && $this->isJson($value))) {
+                    $this->normalize($value, $subject->$subjectGetter($value), $flags);
+                    continue;
+                }
             }
+
             /**
              * Простой сет свойства, если они совпадают по имени
              */
@@ -297,18 +331,68 @@ class Serializer
     }
 
     /**
+     * @param array $source
+     * @param stdClass $subject
+     * @param int $flags
+     */
+    private function arrayToStdClass(array $source, stdClass &$subject, int $flags = self::ADDABLE): void
+    {
+        foreach ($source as $key => $item) {
+            if (is_array($item)) {
+                $subject->$key = $this->normalize($item, new stdClass(), $flags);
+            } else {
+                $subject->$key = $item;
+            }
+        }
+    }
+
+    /**
+     * @param stdClass $source
+     * @param $subject
+     * @param int $flags
+     */
+    private function stdClassToArray($source, &$subject, int $flags = self::ADDABLE)
+    {
+        if ($source instanceof stdClass) {
+            $source = get_object_vars($source);
+        }
+        foreach ($source as $property => $item) {
+            if ($this->isCamelForce($flags)) {
+                $property = $this->toCamel($property);
+            }
+
+            if (!isset($subject[$property])) {
+                $subject[$property] = null;
+            }
+
+            if ($item instanceof stdClass || is_array($item)) {
+                $this->stdClassToArray($item, $subject[$property], $flags);
+            } else {
+                $subject[$property] = $item;
+            }
+        }
+    }
+
+    /**
      * @param PropertyAccessInterface $source
      * @param array $subject
      * @param int $flags
-     * @throws \Exception
      */
     private function objectToArray(PropertyAccessInterface $source, array &$subject = [], int $flags = self::ADDABLE): void
     {
         foreach ($source->getProperties() as $property) {
+
+            $property = $this->isCamelForce($flags) ? $this->toCamel($property) : $property;
+
+            $getMethod = $this->getExistingGetter($source, $this->toCamel($property));
+
+            if ($this->isSerializeFilled($flags) && $source->$getMethod() === null) {
+                continue;
+            }
+
             if (!array_key_exists($property, $subject)) {
                 $subject[$property] = null;
             }
-            $getMethod = $this->getExistingGetter($source, $property);
 
             if (\is_array($source->$getMethod())) {
 
@@ -341,6 +425,12 @@ class Serializer
                 }
                 continue;
             }
+
+            if ($this->isJsonProperty($source, $property) && $this->isArrayWithJson($flags)) {
+                $subject[$property] = $this->serialize($source->$getMethod(), 'json', $flags | Serializer::ONLY_FILLED);
+                continue;
+            }
+
             /**
              * Рекурсивно вызывается,если св-во subject является обьектом
              */
@@ -348,8 +438,12 @@ class Serializer
                 (\is_array($source->$getMethod()) || \is_object($source->$getMethod()))
             ) {
                 $subject[$property] = $this->normalize($source->$getMethod(), $subject[$property], $flags);
+                if ($this->isSerializeFilled($flags) && $subject[$property] === []) {
+                    unset($subject[$property]);
+                }
                 continue;
             }
+
             /**
              * Простой сет свойства, если они совпадают по имени
              */
@@ -361,6 +455,18 @@ class Serializer
             }
             $subject[$property] = $source->$getMethod();
             continue;
+        }
+    }
+
+    private function collectionToArray(ContainsCollectionInterface $source, array &$subject, int $flags)
+    {
+        if ($this->isClearIndexKey($flags)) {
+            $i = 0;
+            foreach ($source->getElements() as $element) {
+                $subject[$i++] = $this->normalize($element, [], $flags);
+            }
+        } else {
+            $subject = $this->normalize($source->getElements(), $subject, $flags);
         }
     }
 
@@ -394,34 +500,21 @@ class Serializer
         return 'add' . ucfirst($key);
     }
 
-
-    /**
-     * @param string $key
-     * @return string
-     */
-    private function isMethod(string $key): string
-    {
-        return preg_match('/^is[A-Z].+/', $key) ? $key : 'is' . ucfirst($key);
-    }
-
     /**
      * @param $source
      * @param string $key
-     * @param bool $force
      * @return string
-     * @throws \Exception
      */
-    private function getExistingGetter($source, string $key, bool $force = false): ?string
+    private function getExistingGetter($source, string $key): ?string
     {
         switch (true) {
-            case method_exists($source, $this->isMethod($key)):
-                return $this->isMethod($key);
+            case preg_match('/^is[A-Z].*/', $key) && method_exists($source, $key):
+                return $key;
             case method_exists($source, $this->getMethod($key)):
                 return $this->getMethod($key);
-            case $force === true:
+            default:
                 return null;
         }
-        throw new \Exception(\sprintf('Getter for %s not exists', $key));
     }
 
     /**
@@ -430,9 +523,9 @@ class Serializer
      */
     private function isJson($data): bool
     {
-        json_decode($data);
+        $data = json_decode($data, true);
 
-        return (json_last_error() === JSON_ERROR_NONE);
+        return (json_last_error() === JSON_ERROR_NONE) && is_array($data);
     }
 
     /**
@@ -441,7 +534,7 @@ class Serializer
      */
     private function isNullable(int $flags): bool
     {
-        return (bool) (static::NULLABLE & $flags);
+        return (bool)(static::NULLABLE & $flags);
     }
 
     /**
@@ -450,7 +543,7 @@ class Serializer
      */
     private function isRewritable(int $flags): bool
     {
-        return (bool) (static::REWRITABLE & $flags);
+        return (bool)(static::REWRITABLE & $flags);
     }
 
     /**
@@ -459,7 +552,7 @@ class Serializer
      */
     private function isAddable(int $flags): bool
     {
-        return (bool) (static::ADDABLE & $flags);
+        return (bool)(static::ADDABLE & $flags);
     }
 
     /**
@@ -468,7 +561,7 @@ class Serializer
      */
     private function isCamelForce(int $flags): bool
     {
-        return (bool) (static::CAMEL_FORCE & $flags);
+        return (bool)(static::CAMEL_FORCE & $flags);
     }
 
     /**
@@ -477,7 +570,25 @@ class Serializer
      */
     private function isSerializeFilled(int $flags): bool
     {
-        return (bool) (static::SERIALIZE_FILLED & $flags);
+        return (bool)(static::ONLY_FILLED & $flags);
+    }
+
+    /**
+     * @param int $flags
+     * @return bool
+     */
+    private function isArrayWithJson(int $flags): bool
+    {
+        return (bool)(static::ARRAY_WITHOUT_JSON & ~$flags);
+    }
+
+    /**
+     * @param int $flags
+     * @return bool
+     */
+    private function isClearIndexKey(int $flags): bool
+    {
+        return (bool)(static::CLEAR_INDEX_KEY & $flags);
     }
 
     /**
@@ -486,8 +597,8 @@ class Serializer
      */
     private function toCamel(string $string): string
     {
-        $string = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $string)));
-        strtolower($string[0]);
+        $string    = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $string)));
+        $string[0] = strtolower($string[0]);
 
         return $string;
     }
@@ -530,5 +641,37 @@ class Serializer
              */
             $subject->set($element instanceof CollectionKeyInterface ? $element->getCollectionKey() : ++$count, $element);
         }
+    }
+
+    public function getColumnByList(ContainsCollectionInterface $collection, string $property): array
+    {
+        $array = [];
+        $class = $collection->getClass();
+        if (new $class() instanceof PropertyAccessInterface) {
+            foreach ($collection->getElements() as $value) {
+                $array[] = $value->{$this->getExistingGetter($value, $property)}();
+            }
+        }
+
+        return $array;
+    }
+
+    private function isJsonProperty($object, string $property): bool
+    {
+        if ($object instanceof HasJsonPropertiesInterface) {
+            return (bool)is_int(array_search($property, $object->getJsonProperties()));
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $data
+     * @param $entity
+     * @return mixed
+     */
+    public function entityFill($data, $entity)
+    {
+        return $this->normalize($data, $entity, Serializer::REWRITABLE | Serializer::CAMEL_FORCE | Serializer::ADDABLE);
     }
 }
