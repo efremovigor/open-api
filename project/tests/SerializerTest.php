@@ -2,16 +2,13 @@
 
 namespace AutoTest\Core\Helper;
 
-use Entity\AbstractList;
-use Entity\Orm\PetCartProductOrmList;
-use Service\Cart\Entity\CartItemPrices;
-use Service\Serializer\CollectionKeyInterface;
-use Service\Serializer\ContainsCollectionInterface;
-use Service\Serializer\PropertyAccessInterface;
-use Service\Serializer;
+use Core\AbstractList;
+use Core\Service\Entity\CollectionKeyInterface;
+use Core\Service\Entity\ContainsCollectionInterface;
+use Core\Service\Entity\HasJsonPropertiesInterface;
+use Core\Service\Entity\PropertyAccessInterface;
+use Core\Service\Serializer;
 use PHPUnit_Framework_TestCase;
-use Registry\RegistryHelper;
-use Service\Serializer\HasJsonPropertiesInterface;
 
 class SerializerTest extends PHPUnit_Framework_TestCase
 {
@@ -20,7 +17,7 @@ class SerializerTest extends PHPUnit_Framework_TestCase
 
     public function __construct(string $name = null, array $data = [], string $dataName = '')
     {
-        $this->serializer = RegistryHelper::getSerializer();
+        $this->serializer = new Serializer();
         parent::__construct($name, $data, $dataName);
     }
 
@@ -565,6 +562,7 @@ class SerializerTest extends PHPUnit_Framework_TestCase
     {
     }
 
+
     public function testJsonToCollection()
     {
         $data = [
@@ -639,11 +637,11 @@ class SerializerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($element1->getPrices()->getGoldPrice(), 704.06);
         $this->assertEquals($element1->getPrices()->getRetailPrice(), 727.1);
 
-        $products_1 = RegistryHelper::getSerializer()->normalize($products, null, Serializer::ONLY_FILLED);
+        $products_1 = $this->serializer->normalize($products, null, Serializer::ONLY_FILLED);
         $this->assertEquals($products_1, $data);
 
 
-        $products_2 = RegistryHelper::getSerializer()->jsonSignificant($products);
+        $products_2 = $this->serializer->jsonSignificant($products);
 
         $json = '[{"id":"373848436","cartId":"680334026","productId":"09ccf7ba-7668-11e2-9939-00259036a114","tax":"0.0000","price":"0.0000","bonusAmount":"0","promoMultiplier":"0","qty":"3","weight":"15000","prices":{"minimalPrice":1090,"goldPrice":1090,"retailPrice":1090,"date":1548054610},"modified":"2019-01-22 14:08:33","code":"00000127948"},{"id":"373848446","cartId":"680334026","productId":"8169676c-95ae-11e5-bed3-00259036a192","tax":"0.0000","price":"0.0000","bonusAmount":"0","promoMultiplier":"0","qty":"1","weight":"26160","prices":{"minimalPrice":660.86,"goldPrice":704.06,"retailPrice":727.1,"date":1548055444},"modified":"2019-01-21 10:24:04","code":"00000151265"}]';
         $this->assertEquals($json, $products_2);
@@ -652,7 +650,7 @@ class SerializerTest extends PHPUnit_Framework_TestCase
         /**
          * @var $products_3 PetCartProductOrmList
          */
-        $products_3 = RegistryHelper::getSerializer()->entityFill($products_1, PetCartProductOrmList::class);
+        $products_3 = $this->serializer->entityFill($products_1, PetCartProductOrmList::class);
 
         [$element0, $element1] = $products_3->getElements();
         $this->assertEquals($element0->getId(), '373848436');
@@ -694,7 +692,7 @@ class SerializerTest extends PHPUnit_Framework_TestCase
         /**
          * @var $products_4 PetCartProductOrmList
          */
-        $products_4 = RegistryHelper::getSerializer()->entityFill($products_2, PetCartProductOrmList::class);
+        $products_4 = $this->serializer->entityFill($products_2, PetCartProductOrmList::class);
 
         [$element0, $element1] = $products_4->getElements();
         $this->assertEquals($element0->getId(), '373848436');
@@ -1062,4 +1060,408 @@ class TestClass3 implements PropertyAccessInterface
     }
 
 
+}
+
+class CartItemPrices implements PropertyAccessInterface
+{
+
+    protected $minimalPrice;
+    protected $goldPrice;
+    protected $retailPrice;
+    protected $individualPrice;
+    protected $date;
+
+
+    /**
+     * @return array
+     */
+    public function getProperties(): array
+    {
+        return [
+            'minimalPrice',
+            'goldPrice',
+            'retailPrice',
+            'individualPrice',
+            'date',
+        ];
+    }
+
+    /**
+     * @return  float|null
+     */
+    public function getMinimalPrice(): ?float
+    {
+        return $this->minimalPrice;
+    }
+
+    /**
+     * @param mixed $minimalPrice
+     */
+    public function setMinimalPrice($minimalPrice): void
+    {
+        $this->minimalPrice = (float)$minimalPrice ?: null;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getGoldPrice(): ?float
+    {
+        return $this->goldPrice;
+    }
+
+    /**
+     * @param mixed $goldPrice
+     */
+    public function setGoldPrice($goldPrice): void
+    {
+        $this->goldPrice = (float)$goldPrice ?: null;
+    }
+
+    /**
+     * @return  float|null
+     */
+    public function getRetailPrice(): ?float
+    {
+        return $this->retailPrice;
+    }
+
+    /**
+     * @param mixed $retailPrice
+     */
+    public function setRetailPrice($retailPrice): void
+    {
+        $this->retailPrice = (float)$retailPrice ?: null;
+    }
+
+    /**
+     * @return  float|null
+     */
+    public function getIndividualPrice(): ?float
+    {
+        return $this->individualPrice;
+    }
+
+    /**
+     * @param mixed $individualPrice
+     */
+    public function setIndividualPrice($individualPrice): void
+    {
+        $this->individualPrice = (float)$individualPrice ?: null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param mixed $date
+     */
+    public function setDate($date): void
+    {
+        $this->date = $date;
+    }
+}
+
+class PetCartProductOrmList extends AbstractList implements ContainsCollectionInterface
+{
+
+    /**
+     * Имя класса списка
+     * @return string
+     */
+    public function getClass(): string
+    {
+        return PetCartProductOrm::class;
+    }
+
+    /**
+     * @return PetCartProductOrm[]
+     */
+    public function getElements(): array
+    {
+        return parent::getElements();
+    }
+}
+
+class PetCartProductOrm implements PropertyAccessInterface, HasJsonPropertiesInterface
+{
+    protected $id;
+    protected $cartId;
+    protected $productId;
+    protected $tax;
+    protected $price;
+    protected $bonusAmount;
+    protected $promoMultiplier;
+    protected $qty;
+    protected $weight;
+    protected $props;
+    protected $prices;
+    protected $created;
+    protected $modified;
+    protected $code;
+
+    /**
+     * @return array
+     */
+    public function getProperties(): array
+    {
+        return [
+            'id',
+            'cartId',
+            'productId',
+            'tax',
+            'price',
+            'bonusAmount',
+            'promoMultiplier',
+            'qty',
+            'weight',
+            'props',
+            'prices',
+            'created',
+            'modified',
+            'code',
+        ];
+    }
+
+
+    public function getJsonProperties(): array
+    {
+        return [
+            'prices',
+        ];
+    }
+
+    public function __construct()
+    {
+        $this->prices = new CartItemPrices();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCartId()
+    {
+        return $this->cartId;
+    }
+
+    /**
+     * @param mixed $cartId
+     */
+    public function setCartId($cartId): void
+    {
+        $this->cartId = $cartId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProductId()
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @param mixed $productId
+     */
+    public function setProductId($productId): void
+    {
+        $this->productId = $productId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTax()
+    {
+        return $this->tax;
+    }
+
+    /**
+     * @param mixed $tax
+     */
+    public function setTax($tax): void
+    {
+        $this->tax = $tax;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * @param mixed $price
+     */
+    public function setPrice($price): void
+    {
+        $this->price = $price;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBonusAmount()
+    {
+        return $this->bonusAmount;
+    }
+
+    /**
+     * @param mixed $bonusAmount
+     */
+    public function setBonusAmount($bonusAmount): void
+    {
+        $this->bonusAmount = $bonusAmount;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPromoMultiplier()
+    {
+        return $this->promoMultiplier;
+    }
+
+    /**
+     * @param mixed $promoMultiplier
+     */
+    public function setPromoMultiplier($promoMultiplier): void
+    {
+        $this->promoMultiplier = $promoMultiplier;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQty()
+    {
+        return $this->qty;
+    }
+
+    /**
+     * @param mixed $qty
+     */
+    public function setQty($qty): void
+    {
+        $this->qty = $qty;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWeight()
+    {
+        return $this->weight;
+    }
+
+    /**
+     * @param mixed $weight
+     */
+    public function setWeight($weight): void
+    {
+        $this->weight = $weight;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProps()
+    {
+        return $this->props;
+    }
+
+    /**
+     * @param mixed $props
+     */
+    public function setProps($props): void
+    {
+        $this->props = $props;
+    }
+
+    /**
+     * @return CartItemPrices
+     */
+    public function getPrices()
+    {
+        return $this->prices;
+    }
+
+    /**
+     * @param mixed $prices
+     */
+    public function setPrices($prices): void
+    {
+        $this->prices = $prices;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param mixed $created
+     */
+    public function setCreated($created): void
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModified()
+    {
+        return $this->modified;
+    }
+
+    /**
+     * @param mixed $modified
+     */
+    public function setModified($modified): void
+    {
+        $this->modified = $modified;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * @param mixed $code
+     */
+    public function setCode($code): void
+    {
+        $this->code = $code;
+    }
 }
